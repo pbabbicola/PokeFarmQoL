@@ -200,7 +200,8 @@ class ShelterPage extends Page {
 
             // get level that pokemon needs to be at to evolve
             let evolve_level = undefined
-            if(GLOBALS.EVOLVE_BY_LEVEL_LIST[name] !== undefined) {
+            if((GLOBALS.EVOLVE_BY_LEVEL_LIST !== null) &&
+               (GLOBALS.EVOLVE_BY_LEVEL_LIST[name] !== undefined)) {
                 evolve_level = parseInt(GLOBALS.EVOLVE_BY_LEVEL_LIST[name].split(' ')[1])
             }
 

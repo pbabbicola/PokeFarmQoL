@@ -27,7 +27,7 @@ class Page {
     getSettings() {
         return this.settings;
     }
-    
+
     populateSettings(obj) {
         if(obj === undefined) {
             obj = this.settings
@@ -77,7 +77,17 @@ class Page {
             }
             return true;
         }
-        else { return false }
+        // if the element is not in the settings, add it in
+        else if(element !== undefined) {
+            if(window.confirm('You have changed a setting that looks to not exist in the stored settings.\n' +
+                              'In order to update the new setting, please click "OK" to reload the page.\n' +
+                              'If you continue to see this, please contact ECEInTheHole in the forum or in a PM')) {
+                this.settings[element] = this.defaultSettings[element]
+                this.saveSettings()
+                window.location.reload()
+            } else { /* nothing */ }
+        }
+        return false;
     }
 
     setupHTML() { /* empty */ }
