@@ -41,11 +41,11 @@ class Page {
                 this.populateSettings(obj[key])
             }
             else if (typeof value === 'boolean') {
-                Helpers.toggleSetting(key, value, false);
+                Helpers.toggleSetting(key, 'qolsetting', value, false);
             }
             else if (typeof value === 'string') {
                 console.log("TODO - split and populate")
-                // Helpers.toggleSetting(key, value, false);
+                // Helpers.toggleSetting(key, 'qolsetting', value, false);
             }
         }
     }
@@ -88,6 +88,12 @@ class Page {
             } else { /* nothing */ }
         }
         return false;
+    }
+
+    clearSettings() {
+        localStorage.setItem(this.settingsSaveKey, '{}')
+        this.settings = this.defaultSettings
+        Helpers.saveSettings(this.settingsSaveKey, this.settings)
     }
 
     setupHTML() { /* empty */ }

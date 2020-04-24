@@ -15,30 +15,30 @@ let Helpers = (function Helpers() {
             return str;
         },
 
-	toggleSetting(key, set = false) {
-	    if (typeof set === 'boolean') {
-		let element = document.querySelector(`.qolsetting[data-key="${key}"]`);
-		if (element && element.type === 'checkbox') {
-		    element.checked = set;
-		}
-	    }
-	    else if (typeof set === 'string') {
-		let element = document.querySelector(`.qolsetting[data-key="${key}"]`);
-		if (element && element.type === 'text') {
-		    element.value = set;
-		}
-	    }
-	}, // toggleSetting
+        toggleSetting(key, cls = 'qolsetting', set = false) {
+            if (typeof set === 'boolean') {
+                let element = document.querySelector(`.${cls}[data-key="${key}"]`);
+                if (element && element.type === 'checkbox') {
+                    element.checked = set;
+                }
+            }
+            else if (typeof set === 'string') {
+                let element = document.querySelector(`.${cls}[data-key="${key}"]`);
+                if (element && element.type === 'text') {
+                    element.value = set;
+                }
+            }
+        }, // toggleSetting
 
-	setupFieldArrayHTML(arr, id, div, cls) {
-	    let n = arr.length;
-	    for(let i = 0; i < n; i++) {
-		let rightDiv = i + 1;
-		let rightValue = arr[i];
-		$(`#${id}`).append(div);
-		$(`.${cls}`).removeClass(cls).addClass(""+rightDiv+"").find('.qolsetting').val(rightValue);
-	    }
-	},
+        setupFieldArrayHTML(arr, id, div, cls) {
+            let n = arr.length;
+            for(let i = 0; i < n; i++) {
+                let rightDiv = i + 1;
+                let rightValue = arr[i];
+                $(`#${id}`).append(div);
+                $(`.${cls}`).removeClass(cls).addClass(""+rightDiv+"").find('.qolsetting').val(rightValue);
+            }
+        },
 
         loadSettings(KEY, DEFAULT, obj) {
             if (localStorage.getItem(KEY) === null) {
@@ -74,16 +74,16 @@ let Helpers = (function Helpers() {
             localStorage.setItem(KEY, JSON.stringify(obj));
         },
 
-	textSearchDiv(cls, data_key, id, array_name) {
+        textSearchDiv(cls, data_key, id, array_name) {
             return `<div class='${cls}'><label><input type="text" class="qolsetting" data-key="${data_key}" ` +
-		((array_name !== undefined) ? `array-name='${array_name}'` : ``) +
-		`/></label><input type='button' value='Remove' id='${id}'></div>`;
-	},
-	
-	selectSearchDiv(cls, name, data_key, options, id, divParent, array_name) {
+                ((array_name !== undefined) ? `array-name='${array_name}'` : ``) +
+                `/></label><input type='button' value='Remove' id='${id}'></div>`;
+        },
+
+        selectSearchDiv(cls, name, data_key, options, id, divParent, array_name) {
             return `<div class='${cls}'> <select name='${name}' class="qolsetting" data-key='${data_key}' ` +
-		`array-name='${array_name}'> ${options} </select> <input type='button' value='Remove' id='${id}'> </div>`;
-	},
+                `array-name='${array_name}'> ${options} </select> <input type='button' value='Remove' id='${id}'> </div>`;
+        },
 
         parseFieldPokemonTooltip(tooltip) {
             const dataElements = $(tooltip).children(0).children()
@@ -102,7 +102,7 @@ let Helpers = (function Helpers() {
                                                              typeUrls[idx].indexOf(".png")))
             types = types.map(idx => types[idx].charAt(0).toUpperCase() + types[idx].substring(1))
             types = types.map(idx => GLOBALS.TYPE_LIST.indexOf(types[idx]))
-            
+
             // level
             const level = parseInt(dataElements[4].textContent.split(' ')[1])
 
@@ -131,7 +131,7 @@ let Helpers = (function Helpers() {
                 'eggGroups': eggGroups,
             }
         }
-	
+
     };
 
     return API;

@@ -156,11 +156,11 @@
                         }
                         let value = VARIABLES.userSettings[key];
                         if (typeof value === 'boolean') {
-                            Helpers.toggleSetting(key, value, false);
+                            Helpers.toggleSetting(key, 'qolhubsetting', value, false);
                             continue;
                         }
                         else if (typeof value === 'string') {
-                            Helpers.toggleSetting(key, value, false);
+                            Helpers.toggleSetting(key, 'qolhubsetting', value, false);
                             continue;
                         }
                     }
@@ -215,7 +215,7 @@
                         }
                     }
 
-                    $(document).on('change', '.qolsetting', (function() {
+                    $(document).on('change', '.qolhubsetting', (function() {
                         fn.backwork.loadSettings();
                         fn.API.settingsChange(this.getAttribute('data-key'), $(this).val(), $(this).parent().parent().attr('class'), $(this).parent().attr('class'));
                         fn.backwork.saveSettings();
@@ -262,7 +262,7 @@
                     fn.backwork.populateSettingsPage();
                     let customCss = VARIABLES.userSettings.customCss;
 
-                    $('.textareahub').append('<textarea id="qolcustomcss" rows="15" cols="60" class="qolsetting" data-key="customCss"/></textarea>');
+                    $('.textareahub').append('<textarea id="qolcustomcss" rows="15" cols="60" class="qolhubsetting" data-key="customCss"/></textarea>');
                     if (VARIABLES.userSettings.customCss === "") {
                         $('.textareahub textarea').val(`#thisisanexample {\n    color: yellow;\n}\n\n.thisisalsoanexample {\n    background-color: blue!important;\n}\n\nhappycssing {\n    display: absolute;\n}`);
                     } else {
@@ -304,6 +304,15 @@
                             }
                         }
                     }
+                },
+
+                clearPageSettings() {
+                    for(const key of Object.keys(PAGES)) {
+                        let pg = PAGES[key]
+                        if(VARIABLES.userSettings[pg[PAGE_VAR_INDEX]] === true && pg[PAGE_OBJ_INDEX].onPage(window)) {
+                            pg[PAGE_OBJ_INDEX].clearSettings();
+                        }
+                    }
                 }
             }, // end of API
         }; // end of fn
@@ -319,6 +328,10 @@
 
     $(document).on('click', '.closeHub', (function() { //close QoL hub
         PFQoL.qolHubClose();
+    }));
+
+    $(document).on('click', '#clearSettings', (function() { // clear the settings for the current page
+        PFQoL.clearPageSettings();
     }));
 
     $(document).on('click', '#updateDex', (function() {
