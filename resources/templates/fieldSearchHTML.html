@@ -1,6 +1,6 @@
 <div id ="fieldsearch">
   <h4>Advanced Field search</h4>
-  <p> Check the boxes of Pokémon you wish to find in this field! You can select multiple checkboxes at once and it will notify you whenever it will find the types of Pokémons you selected!</p>
+  <p> Check the boxes of PokÃ©mon you wish to find in this field! You can select multiple checkboxes at once and it will notify you whenever it will find the types of PokÃ©mons you selected!</p>
   <table>
     <tbody>
       <tr>
@@ -65,44 +65,52 @@
       </tr>
     </tbody>
   </table>
-  <h4>Search on type</h4>
-  <p>Select which types of Pokémon you wish to find</p>
-  <input type='button' value='Add type' id='addTypeSearch'>
-  <div id="typeTypes">
-    <div class='0'></div>
+  <button type="button" class="accordian">Search on Types</button>
+  <div class="accordianPanel">
+    <p>Select which types of PokÃ©mon you wish to find</p>
+    <input type='button' value='Add type' id='addTypeSearch'>
+    <div id="typeTypes">
+      <div class='0'></div>
+    </div>
   </div>
-  <h4>Search on nature</h4>
-  <p>Select which natures of Pokémon you wish to find</p>
-  <input type='button' value='Add nature' id='addNatureSearch'>
-  <div id="natureTypes">
-    <div class='0'></div>
+  <button type="button" class="accordian">Search on Natures</button>
+  <div class="accordianPanel">
+    <p>Select which natures of PokÃ©mon you wish to find</p>
+    <input type='button' value='Add nature' id='addNatureSearch'>
+    <div id="natureTypes">
+      <div class='0'></div>
+    </div>
   </div>
-  <h4>Search on egg group</h4>
-  <p>Select which egg groups you wish to find</p>
-  <input type='button' value='Add egg group' id='addEggGroupSearch'>
-  <div id="eggGroupTypes">
-    <div class='0'></div>
+  <button type="button" class="accordian">Search on Egg Groups</button>
+  <div class="accordianPanel">
+    <p>Select which egg groups you wish to find</p>
+    <input type='button' value='Add egg group' id='addEggGroupSearch'>
+    <div id="eggGroupTypes">
+      <div class='0'></div>
+    </div>
   </div>
-  <h4>Search on gender</h4>
-  <table>
-    <tbody>
-      <tr>
-        <td>
-          <label>
-            <input type="checkbox" class="qolsetting" data-key="findMale"/>Male
-          </label>
-        </td>
-        <td>
-          <label>
-            <input type="checkbox" class="qolsetting" data-key="findFemale"/>Female
-          </label>
-        </td>
-        <td>
-          <label>
-            <input type="checkbox" class="qolsetting" data-key="findNoGender"/>Genderless
-          </label>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <button type="button" class="accordian">Search on Genders</button>
+  <div class="accordianPanel">
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <label>
+              <input type="checkbox" class="qolsetting" data-key="findMale"/>Male
+            </label>
+          </td>
+          <td>
+            <label>
+              <input type="checkbox" class="qolsetting" data-key="findFemale"/>Female
+            </label>
+          </td>
+          <td>
+            <label>
+              <input type="checkbox" class="qolsetting" data-key="findNoGender"/>Genderless
+            </label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

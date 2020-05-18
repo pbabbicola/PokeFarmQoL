@@ -86,6 +86,23 @@ class PublicFieldsPage extends Page {
         $("#fieldorder").css("border", ""+fieldOrderCssBorder+"");
         $("#fieldsearch").css("background-color", ""+fieldOrderCssColor+"");
         $("#fieldsearch").css("border", ""+fieldOrderCssBorder+"");
+
+        // accordian CSS
+        $(".accordian").css("background-color", "#eee")
+        $(".accordian").css("color", "#444")
+        $(".accordian").css("cursor", "pointer")
+        $(".accordian").css("padding", "18px")
+        $(".accordian").css("width", "100%")
+        $(".accordian").css("border", "none")
+        $(".accordian").css("text-align", "left")
+        $(".accordian").css("outline", "none")
+        $(".accordian").css("font-size", "15px")
+        $(".accordian").css("transition", "0.4s")
+        $(".active,.accordion:hover").css("background-color", "#ccc")
+        $(".panel").css("padding", "0 18px")
+        $(".panel").css("display", "none")
+        $(".panel").css("background-color", "white")
+        $(".panel").css("overflow", "hidden")
     }
     setupObserver() {
         this.observer.observe(document.querySelector('#field_field'), {
