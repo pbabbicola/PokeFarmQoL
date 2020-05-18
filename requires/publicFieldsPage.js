@@ -30,6 +30,9 @@ class PublicFieldsPage extends Page {
         this.typeArray = [];
         this.natureArray = [];
         this.eggGroupArray = [];
+        this.TYPES_NAME = 'typeTypes'
+        this.NATURES_NAME = 'natureTypes'
+        this.EGG_GROUPS_NAME = 'eggGroupTypes'
         const obj = this
         this.observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
@@ -62,19 +65,19 @@ class PublicFieldsPage extends Page {
 
         const theField = Helpers.textSearchDiv('numberDiv', 'fieldCustom', 'removeFieldSearch')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS,
-                                             'removeFieldTypeSearch', 'fieldTypes', 'typeArray');
+                                             'removeFieldTypeSearch', this.TYPES_NAME, 'typeArray');
         const theNature = Helpers.selectSearchDiv('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS,
-                                               'removeFieldNature', 'natureTypes', 'natureArray')
+                                               'removeFieldNature', this.NATURES_NAME, 'natureArray')
         const theEggGroup = Helpers.selectSearchDiv('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS,
-                                                 'removeFieldEggGroup', 'eggGroupTypes', 'eggGroupArray')
+                                                 'removeFieldEggGroup', this.EGG_GROUPS_NAME, 'eggGroupArray')
         this.customArray = this.settings.fieldCustom.split(',');
         this.typeArray = this.settings.fieldType.split(',');
         this.natureArray = this.settings.fieldNature.split(',');
         this.eggGroupArray = this.settings.fieldEggGroup.split(',');
         Helpers.setupFieldArrayHTML(this.customArray, 'searchkeys', theField, 'numberDiv');
-        Helpers.setupFieldArrayHTML(this.typeArray, 'fieldTypes', theType, 'typeNumber');
-        Helpers.setupFieldArrayHTML(this.natureArray, 'natureTypes', theNature, 'natureNumber');
-        Helpers.setupFieldArrayHTML(this.eggGroupArray, 'eggGroupTypes', theEggGroup, 'eggGroupNumber');
+        Helpers.setupFieldArrayHTML(this.typeArray, this.TYPES_NAME, theType, 'typeNumber');
+        Helpers.setupFieldArrayHTML(this.natureArray, this.NATURES_NAME, theNature, 'natureNumber');
+        Helpers.setupFieldArrayHTML(this.eggGroupArray, this.EGG_GROUPS_NAME, theEggGroup, 'eggGroupNumber');
     }
     setupCSS() {
         let fieldOrderCssColor = $('#field_field').css('background-color');
@@ -116,34 +119,34 @@ class PublicFieldsPage extends Page {
         }));
 
         $(document).on('click', '#addFieldTypeSearch', (function() { //add field type list
-            obj.addSelectSearch('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS, 'removeFieldTypeSearch', 'fieldTypes', 'typeArray');
+            obj.addSelectSearch('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS, 'removeFieldTypeSearch', obj.TYPES_NAME, 'typeArray');
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeFieldTypeSearch', (function() { //remove field type list
-            obj.typeArray = obj.removeSelectSearch(obj.typeArray, this, $(this).parent().find('select').val(), 'fieldType', 'fieldTypes')
+            obj.typeArray = obj.removeSelectSearch(obj.typeArray, this, $(this).parent().find('select').val(), 'fieldType', obj.TYPES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
         $(document).on('click', '#addFieldNatureSearch', (function() { //add field nature search
-            obj.addSelectSearch('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS, 'removeFieldNature', 'natureTypes', 'natureArray')
+            obj.addSelectSearch('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS, 'removeFieldNature', obj.NATURES_NAME, 'natureArray')
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeFieldNature', (function() { //remove field nature search
-            obj.natureArray = obj.removeSelectSearch(obj.natureArray, this, $(this).parent().find('select').val(), 'fieldNature', 'natureTypes')
+            obj.natureArray = obj.removeSelectSearch(obj.natureArray, this, $(this).parent().find('select').val(), 'fieldNature', obj.NATURES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
         $(document).on('click', '#addFieldEggGroupSearch', (function() { //add egg group nature search
-            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeFieldEggGroup', 'eggGroupTypes', 'eggGroupArray')
+            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeFieldEggGroup', obj.EGG_GROUPS_NAME, 'eggGroupArray')
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeFieldEggGroup', (function() { //remove egg group nature search
-            obj.eggGroupArray = obj.removeSelectSearch(obj.eggGroupArray, this, $(this).parent().find('select').val(), 'fieldEggGroup', 'eggGroupTypes')
+            obj.eggGroupArray = obj.removeSelectSearch(obj.eggGroupArray, this, $(this).parent().find('select').val(), 'fieldEggGroup', obj.EGG_GROUPS_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
