@@ -53,7 +53,7 @@ class ShelterPage extends Page {
         this.typeArray = this.settings.findType.split(',');
 
         Helpers.setupFieldArrayHTML(this.customArray, 'searchkeys', theField, 'numberDiv')
-        Helpers.setupFieldArrayHTML(this.typeArray, 'shelterTypes', theType, 'typeNumber')
+        Helpers.setupFieldArrayHTML(this.typeArray, 'typeTypes', theType, 'typeNumber')
 
         $('[data-shelter=reload]').addClass('customSearchOnClick');
         $('[data-shelter=whiteflute]').addClass('customSearchOnClick');
@@ -174,8 +174,8 @@ class ShelterPage extends Page {
     addTypeList() {
         const theList = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
                                              'removeTypeSearch', 'fieldTypes', 'typeArray');
-        let numberTypes = $('#shelterTypes>div').length;
-        $('#shelterTypes').append(theList);
+        let numberTypes = $('#typeTypes>div').length;
+        $('#typeTypes').append(theList);
         $('.typeNumber').removeClass('typeNumber').addClass(""+numberTypes+"");
     }
     removeTypeList(byebye, key) {
@@ -187,7 +187,7 @@ class ShelterPage extends Page {
         $(byebye).parent().remove();
 
         let i;
-        for(i = 0; i < $('#shelterTypes>div').length; i++) {
+        for(i = 0; i < $('#typeTypes>div').length; i++) {
             let rightDiv = i + 1;
             $('.'+i+'').next().removeClass().addClass(''+rightDiv+'');
         }
