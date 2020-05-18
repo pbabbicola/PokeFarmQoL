@@ -63,7 +63,7 @@ class PublicFieldsPage extends Page {
         document.querySelector('#field_field').insertAdjacentHTML('beforebegin', TEMPLATES.fieldSortHTML);
         document.querySelector('#field_field').insertAdjacentHTML('afterend', TEMPLATES.fieldSearchHTML);
 
-        const theField = Helpers.textSearchDiv('numberDiv', 'fieldCustom', 'removeFieldSearch')
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'fieldCustom', 'removeFieldSearch')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS,
                                              'removeTypeSearch', this.TYPES_NAME, 'typeArray');
         const theNature = Helpers.selectSearchDiv('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS,
@@ -99,10 +99,10 @@ class PublicFieldsPage extends Page {
         $(".accordian").css("font-size", "15px")
         $(".accordian").css("transition", "0.4s")
         $(".active,.accordion:hover").css("background-color", "#ccc")
-        $(".panel").css("padding", "0 18px")
-        $(".panel").css("display", "none")
-        $(".panel").css("background-color", "white")
-        $(".panel").css("overflow", "hidden")
+        $(".accordianPanel").css("padding", "0 18px")
+        $(".accordianPanel").css("display", "none")
+        $(".accordianPanel").css("background-color", "white")
+        $(".accordianPanel").css("overflow", "hidden")
     }
     setupObserver() {
         this.observer.observe(document.querySelector('#field_field'), {
