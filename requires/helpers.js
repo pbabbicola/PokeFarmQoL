@@ -84,11 +84,11 @@ let Helpers = (function Helpers() {
             return `<div class='${cls}'><label><input type="text" class="qolsetting" data-key="${data_key}" ` +
                 ((array_name !== undefined && array_name !== '') ? `array-name='${array_name}'` : ``) +
                 `/></label><input type='button' value='Remove' id='${id}'>` +
-                `<label><input type="checkbox" class="qolsetting" data-key="customEgg"/>Custom Egg</label>` +
-                `<label><input type="checkbox" class="qolsetting" data-key="customPokemon"/>Custom Pokemon</label>` +
+                `<label><input type="checkbox" class="qolsetting" data-key="customEgg"/>Egg</label>` +
+                `<label><input type="checkbox" class="qolsetting" data-key="customPokemon"/>Pokemon</label>` +
                 `<label><input type="checkbox" class="qolsetting" data-key="customPng"/>By img code</label>` +
                 `</div>`
-        }
+        },
 
         selectSearchDiv(cls, name, data_key, options, id, divParent, array_name) {
             return `<div class='${cls}'> <select name='${name}' class="qolsetting" data-key='${data_key}' ` +

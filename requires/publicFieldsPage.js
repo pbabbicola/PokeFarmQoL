@@ -88,12 +88,12 @@ class PublicFieldsPage extends Page {
         $("#fieldsearch").css("border", ""+fieldOrderCssBorder+"");
 
         // accordian CSS
-        $(".accordian").css("background-color", "#eee")
+        $(".accordian").css("background-color", ""+fieldOrderCssColor)
         $(".accordian").css("color", "#444")
         $(".accordian").css("cursor", "pointer")
         $(".accordian").css("padding", "18px")
         $(".accordian").css("width", "100%")
-        $(".accordian").css("border", "none")
+        $(".accordian").css("border", ""+fieldOrderCssBorder)
         $(".accordian").css("text-align", "left")
         $(".accordian").css("outline", "none")
         $(".accordian").css("font-size", "15px")
@@ -101,7 +101,7 @@ class PublicFieldsPage extends Page {
         $(".active,.accordion:hover").css("background-color", "#ccc")
         $(".accordianPanel").css("padding", "0 18px")
         $(".accordianPanel").css("display", "none")
-        $(".accordianPanel").css("background-color", "white")
+        $(".accordianPanel").css("background-color", ""+fieldOrderCssColor)
         $(".accordianPanel").css("overflow", "hidden")
     }
     setupObserver() {
@@ -127,11 +127,11 @@ class PublicFieldsPage extends Page {
             obj.customSearch();
         });
 
-        $(document).on('click', '#addFieldSearch', (function() { //add field text field
+        $(document).on('click', '#addTextField', (function() { //add field text field
             obj.fieldAddTextField();
         }));
 
-        $(document).on('click', '#removeFieldSearch', (function() { //remove field text field
+        $(document).on('click', '#removeTextField', (function() { //remove field text field
             obj.fieldRemoveTextField(this, $(this).parent().find('input').val());
         }));
 
@@ -187,6 +187,19 @@ class PublicFieldsPage extends Page {
         $('input.qolalone').on('change', function() { //only 1 textbox may be true
             $('input.qolalone').not(this).prop('checked', false);
         });
+
+        $(document).on('click', '.accordian', (function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active")
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }));
     }
     // specific
     customSearch() {
@@ -353,7 +366,7 @@ class PublicFieldsPage extends Page {
         return arr;
     }
     fieldAddTextField() {
-        const theField = Helpers.textSearchDiv('numberDiv', 'fieldCustom', 'removeFieldSearch')
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'fieldCustom', 'removeTextField')
         let numberDiv = $('#searchkeys>div').length;
         $('#searchkeys').append(theField);
         $('.numberDiv').removeClass('numberDiv').addClass(""+numberDiv+"");
