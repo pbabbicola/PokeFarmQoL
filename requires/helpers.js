@@ -82,7 +82,11 @@ let Helpers = (function Helpers() {
 
         selectSearchDiv(cls, name, data_key, options, id, divParent, array_name) {
             return `<div class='${cls}'> <select name='${name}' class="qolsetting" data-key='${data_key}' ` +
-                `array-name='${array_name}'> ${options} </select> <input type='button' value='Remove' id='${id}'> </div>`;
+                `array-name='${array_name}'> ${options} </select>` +
+                `<input type='button' value='Remove' id='${id}'>` +
+                `<label><input type="checkbox" id='findMatchingEgg'>Eggs</label>` +
+                `<label><input type="checkbox" id='findMatchingPokemon'>Pokemon</label>` +
+                `</div>`
         },
 
         parseFieldPokemonTooltip(tooltip) {
