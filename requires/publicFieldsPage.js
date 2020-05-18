@@ -65,11 +65,11 @@ class PublicFieldsPage extends Page {
 
         const theField = Helpers.textSearchDiv('numberDiv', 'fieldCustom', 'removeFieldSearch')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS,
-                                             'removeFieldTypeSearch', this.TYPES_NAME, 'typeArray');
+                                             'removeTypeSearch', this.TYPES_NAME, 'typeArray');
         const theNature = Helpers.selectSearchDiv('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS,
-                                               'removeFieldNature', this.NATURES_NAME, 'natureArray')
+                                               'removeNatureSearch', this.NATURES_NAME, 'natureArray')
         const theEggGroup = Helpers.selectSearchDiv('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS,
-                                                 'removeFieldEggGroup', this.EGG_GROUPS_NAME, 'eggGroupArray')
+                                                 'removeEggGroupSearch', this.EGG_GROUPS_NAME, 'eggGroupArray')
         this.customArray = this.settings.fieldCustom.split(',');
         this.typeArray = this.settings.fieldType.split(',');
         this.natureArray = this.settings.fieldNature.split(',');
@@ -118,34 +118,34 @@ class PublicFieldsPage extends Page {
             obj.fieldRemoveTextField(this, $(this).parent().find('input').val());
         }));
 
-        $(document).on('click', '#addFieldTypeSearch', (function() { //add field type list
-            obj.addSelectSearch('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS, 'removeFieldTypeSearch', obj.TYPES_NAME, 'typeArray');
+        $(document).on('click', '#addTypeSearch', (function() { //add field type list
+            obj.addSelectSearch('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS, 'removeTypeSearch', obj.TYPES_NAME, 'typeArray');
             obj.customSearch();
         }));
 
-        $(document).on('click', '#removeFieldTypeSearch', (function() { //remove field type list
+        $(document).on('click', '#removeTypeSearch', (function() { //remove field type list
             obj.typeArray = obj.removeSelectSearch(obj.typeArray, this, $(this).parent().find('select').val(), 'fieldType', obj.TYPES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
-        $(document).on('click', '#addFieldNatureSearch', (function() { //add field nature search
-            obj.addSelectSearch('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS, 'removeFieldNature', obj.NATURES_NAME, 'natureArray')
+        $(document).on('click', '#addNatureSearch', (function() { //add field nature search
+            obj.addSelectSearch('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS, 'removeNatureSearch', obj.NATURES_NAME, 'natureArray')
             obj.customSearch();
         }));
 
-        $(document).on('click', '#removeFieldNature', (function() { //remove field nature search
+        $(document).on('click', '#removeNatureSearch', (function() { //remove field nature search
             obj.natureArray = obj.removeSelectSearch(obj.natureArray, this, $(this).parent().find('select').val(), 'fieldNature', obj.NATURES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
-        $(document).on('click', '#addFieldEggGroupSearch', (function() { //add egg group nature search
-            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeFieldEggGroup', obj.EGG_GROUPS_NAME, 'eggGroupArray')
+        $(document).on('click', '#addEggGroupSearch', (function() { //add egg group nature search
+            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeEggGroupSearch', obj.EGG_GROUPS_NAME, 'eggGroupArray')
             obj.customSearch();
         }));
 
-        $(document).on('click', '#removeFieldEggGroup', (function() { //remove egg group nature search
+        $(document).on('click', '#removeEggGroupSearch', (function() { //remove egg group nature search
             obj.eggGroupArray = obj.removeSelectSearch(obj.eggGroupArray, this, $(this).parent().find('select').val(), 'fieldEggGroup', obj.EGG_GROUPS_NAME)
             obj.saveSettings();
             obj.customSearch();
