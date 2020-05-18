@@ -47,7 +47,7 @@ class ShelterPage extends Page {
 
         const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-                                             'removeShelterTypeList', 'fieldTypes', 'typeArray');
+                                             'removeTypeSearch', 'fieldTypes', 'typeArray');
 
         this.customArray = this.settings.findCustom.split(',');
         this.typeArray = this.settings.findType.split(',');
@@ -61,8 +61,8 @@ class ShelterPage extends Page {
     }
     setupCSS() {
         let shelterSuccessColor = $('#sheltercommands').css('background-color');
-        let shelterSuccessBorder = $('#sheltercommands').css('border');
-        $('#sheltersuccess').css('background-color', shelterSuccessCss);
+        let shelterSuccessBorder = "1px solid rgb(158, 198, 144)"
+        $('#sheltersuccess').css('background-color', shelterSuccessColor);
 
         // accordian CSS
         $(".accordian").css("background-color", ""+shelterSuccessColor)
@@ -127,12 +127,12 @@ class ShelterPage extends Page {
             obj.customSearch();
         }));
 
-        $(document).on('click', '#addShelterTypeList', (function() { //add shelter type list
+        $(document).on('click', '#addTypeSearch', (function() { //add shelter type list
             obj.addTypeList();
             obj.customSearch();
         }));
 
-        $(document).on('click', '#removeShelterTypeList', (function() { //remove shelter type list
+        $(document).on('click', '#removeTypeSearch', (function() { //remove shelter type list
             obj.removeTypeList(this, $(this).parent().find('select').val());
             obj.saveSettings();
             obj.customSearch();
@@ -173,7 +173,7 @@ class ShelterPage extends Page {
     }
     addTypeList() {
         const theList = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-                                             'removeShelterTypeList', 'fieldTypes', 'typeArray');
+                                             'removeTypeSearch', 'fieldTypes', 'typeArray');
         let numberTypes = $('#shelterTypes>div').length;
         $('#shelterTypes').append(theList);
         $('.typeNumber').removeClass('typeNumber').addClass(""+numberTypes+"");
