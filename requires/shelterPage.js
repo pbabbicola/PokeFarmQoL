@@ -45,7 +45,7 @@ class ShelterPage extends Page {
 
         document.querySelector('#sheltercommands').insertAdjacentHTML('beforebegin', '<div id="sheltersuccess"></div>');
 
-        const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
                                              'removeShelterTypeList', 'fieldTypes', 'typeArray');
 
@@ -60,8 +60,26 @@ class ShelterPage extends Page {
         $('[data-shelter=blackflute]').addClass('customSearchOnClick');
     }
     setupCSS() {
-        let shelterSuccessCss = $('#sheltercommands').css('background-color');
+        let shelterSuccessColor = $('#sheltercommands').css('background-color');
+        let shelterSuccessBorder = $('#sheltercommands').css('border');
         $('#sheltersuccess').css('background-color', shelterSuccessCss);
+
+        // accordian CSS
+        $(".accordian").css("background-color", ""+shelterSuccessColor)
+        $(".accordian").css("color", "#444")
+        $(".accordian").css("cursor", "pointer")
+        $(".accordian").css("padding", "18px")
+        $(".accordian").css("width", "100%")
+        $(".accordian").css("border", ""+shelterSuccessBorder)
+        $(".accordian").css("text-align", "left")
+        $(".accordian").css("outline", "none")
+        $(".accordian").css("font-size", "15px")
+        $(".accordian").css("transition", "0.4s")
+        $(".active,.accordion:hover").css("background-color", "#ccc")
+        $(".accordianPanel").css("padding", "0 18px")
+        $(".accordianPanel").css("display", "none")
+        $(".accordianPanel").css("background-color", ""+shelterSuccessColor)
+        $(".accordianPanel").css("overflow", "hidden")
     }
     setupObserver() {
         this.observer.observe(document.querySelector('#shelterarea'), {
@@ -98,12 +116,12 @@ class ShelterPage extends Page {
             obj.saveSettings();
         }));
 
-        $(document).on('click', '#addShelterTextfield', (function() { //add shelter text field
+        $(document).on('click', '#addTextField', (function() { //add shelter text field
             obj.addTextField();
             obj.saveSettings();
         }));
 
-        $(document).on('click', '#removeShelterTextfield', (function() { //remove shelter text field
+        $(document).on('click', '#removeTextField', (function() { //remove shelter text field
             obj.removeTextField(this, $(this).parent().find('input').val());
             obj.saveSettings();
             obj.customSearch();
@@ -119,9 +137,22 @@ class ShelterPage extends Page {
             obj.saveSettings();
             obj.customSearch();
         }));
+
+        $(document).on('click', '.accordian', (function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active")
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }));
     }
     addTextField() {
-        const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
+        const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField', 'customArray')
         let numberDiv = $('#searchkeys>div').length;
         $('#searchkeys').append(theField);
         $('.numberDiv').removeClass('numberDiv').addClass(""+numberDiv+"");

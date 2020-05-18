@@ -86,7 +86,7 @@ let Helpers = (function Helpers() {
                 `/></label><input type='button' value='Remove' id='${id}'>` +
                 `<label><input type="checkbox" class="qolsetting" data-key="customEgg"/>Egg</label>` +
                 `<label><input type="checkbox" class="qolsetting" data-key="customPokemon"/>Pokemon</label>` +
-                `<label><input type="checkbox" class="qolsetting" data-key="customPng"/>By img code</label>` +
+                `<label><input type="checkbox" class="qolsetting" data-key="customPng"/>Img code</label>` +
                 `</div>`
         },
 
