@@ -1,31 +1,47 @@
 class PublicFieldsPage extends Page {
     constructor() {
-        super('QoLPublicFields', {
-            fieldByBerry: false,
-            fieldByMiddle: false,
-            fieldByGrid: false,
-            fieldClickCount: true,
-            fieldCustom: "",
-            fieldType: "",
-            fieldNature: "",
-            fieldEggGroup: "",
-            fieldNewPokemon: true,
-            fieldShiny: true,
-            fieldAlbino: true,
-            fieldMelanistic: true,
-            fieldPrehistoric: true,
-            fieldDelta: true,
-            fieldMega: true,
-            fieldStarter: true,
-            fieldCustomSprite: true,
-            fieldMale: true,
-            fieldFemale: true,
-            fieldNoGender: true,
-            fieldCustomPokemon: true,
-            fieldCustomPng: false,
-            fieldItem: true,
-            customItem: true,
-        }, 'fields/');
+        this.SORT_BY_BERRY = 'findByBerry'
+        this.SORT_BY_MIDDLE = 'findByMiddle'
+        this.SORT_BY_GRID = 'findByGrid'
+
+        const settings = {
+            // checkboxes
+            /* findNewEgg: true, */
+            findNewPokemon: true,
+            findShiny: true,
+            findAlbino: true,
+            findMelanistic: true,
+            findPrehistoric: true,
+            findDelta: true,
+            findMega: true,
+            findStarter: true,
+            findCustomSprite: true,
+            findReadyToEvolve: false,
+            findItem: true,
+            // types
+            findType: "",
+            // natures
+            findNature: "",
+            // egg groups
+            findEggGroup: "",
+            // genders
+            findMale: true,
+            findFemale: true,
+            findNoGender: true,
+            // custom search
+            findCustom: "",
+            findCustomPokemon: true,
+            findCustomPng: false,
+            // click counter
+            clickCount: true,
+            /* customItem: true, */
+        }
+        // sort settings
+        settings[this.SORT_BY_BERRY] = false
+        settings[this.SORT_BY_MIDDLE] = false
+        settings[this.SORT_BY_GRID] = false
+        
+        super('QoLPublicFields', settings, 'fields/');
         this.customArray = [];
         this.typeArray = [];
         this.natureArray = [];
@@ -46,7 +62,9 @@ class PublicFieldsPage extends Page {
 	    return false;
 	}
 
-	const mutuallyExclusive = ["fieldByBerry", "fieldByMiddle", "fieldByGrid"]
+	const mutuallyExclusive = [this.SORT_BY_BERRY,
+                                   this.SORT_BY_MIDDLE,
+                                   this.SORT_BY_GRID]
         const idx = mutuallyExclusive.indexOf(element)
         if(idx > -1) {
             for(let i = 0; i < mutuallyExclusive.length; i++) {
@@ -63,17 +81,17 @@ class PublicFieldsPage extends Page {
         document.querySelector('#field_field').insertAdjacentHTML('beforebegin', TEMPLATES.fieldSortHTML);
         document.querySelector('#field_field').insertAdjacentHTML('afterend', TEMPLATES.fieldSearchHTML);
 
-        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'fieldCustom', 'removeFieldSearch')
-        const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS,
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeFieldSearch')
+        const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
                                              'removeTypeSearch', this.TYPES_NAME, 'typeArray');
-        const theNature = Helpers.selectSearchDiv('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS,
+        const theNature = Helpers.selectSearchDiv('natureNumber', 'natures', 'findNature', GLOBALS.NATURE_OPTIONS,
                                                'removeNatureSearch', this.NATURES_NAME, 'natureArray')
-        const theEggGroup = Helpers.selectSearchDiv('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS,
+        const theEggGroup = Helpers.selectSearchDiv('eggGroupNumber', 'eggGroups', 'findEggGroup', GLOBALS.EGG_GROUP_OPTIONS,
                                                  'removeEggGroupSearch', this.EGG_GROUPS_NAME, 'eggGroupArray')
-        this.customArray = this.settings.fieldCustom.split(',');
-        this.typeArray = this.settings.fieldType.split(',');
-        this.natureArray = this.settings.fieldNature.split(',');
-        this.eggGroupArray = this.settings.fieldEggGroup.split(',');
+        this.customArray = this.settings.findCustom.split(',');
+        this.typeArray = this.settings.findType.split(',');
+        this.natureArray = this.settings.findNature.split(',');
+        this.eggGroupArray = this.settings.findEggGroup.split(',');
         Helpers.setupFieldArrayHTML(this.customArray, 'searchkeys', theField, 'numberDiv');
         Helpers.setupFieldArrayHTML(this.typeArray, this.TYPES_NAME, theType, 'typeNumber');
         Helpers.setupFieldArrayHTML(this.natureArray, this.NATURES_NAME, theNature, 'natureNumber');
@@ -136,34 +154,34 @@ class PublicFieldsPage extends Page {
         }));
 
         $(document).on('click', '#addTypeSearch', (function() { //add field type list
-            obj.addSelectSearch('typeNumber', 'types', 'fieldType', GLOBALS.TYPE_OPTIONS, 'removeTypeSearch', obj.TYPES_NAME, 'typeArray');
+            obj.addSelectSearch('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS, 'removeTypeSearch', obj.TYPES_NAME, 'typeArray');
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeTypeSearch', (function() { //remove field type list
-            obj.typeArray = obj.removeSelectSearch(obj.typeArray, this, $(this).parent().find('select').val(), 'fieldType', obj.TYPES_NAME)
+            obj.typeArray = obj.removeSelectSearch(obj.typeArray, this, $(this).parent().find('select').val(), 'findType', obj.TYPES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
         $(document).on('click', '#addNatureSearch', (function() { //add field nature search
-            obj.addSelectSearch('natureNumber', 'natures', 'fieldNature', GLOBALS.NATURE_OPTIONS, 'removeNatureSearch', obj.NATURES_NAME, 'natureArray')
+            obj.addSelectSearch('natureNumber', 'natures', 'findNature', GLOBALS.NATURE_OPTIONS, 'removeNatureSearch', obj.NATURES_NAME, 'natureArray')
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeNatureSearch', (function() { //remove field nature search
-            obj.natureArray = obj.removeSelectSearch(obj.natureArray, this, $(this).parent().find('select').val(), 'fieldNature', obj.NATURES_NAME)
+            obj.natureArray = obj.removeSelectSearch(obj.natureArray, this, $(this).parent().find('select').val(), 'findNature', obj.NATURES_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
 
         $(document).on('click', '#addEggGroupSearch', (function() { //add egg group nature search
-            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'fieldEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeEggGroupSearch', obj.EGG_GROUPS_NAME, 'eggGroupArray')
+            obj.addSelectSearch('eggGroupNumber', 'eggGroups', 'findEggGroup', GLOBALS.EGG_GROUP_OPTIONS, 'removeEggGroupSearch', obj.EGG_GROUPS_NAME, 'eggGroupArray')
             obj.customSearch();
         }));
 
         $(document).on('click', '#removeEggGroupSearch', (function() { //remove egg group nature search
-            obj.eggGroupArray = obj.removeSelectSearch(obj.eggGroupArray, this, $(this).parent().find('select').val(), 'fieldEggGroup', obj.EGG_GROUPS_NAME)
+            obj.eggGroupArray = obj.removeSelectSearch(obj.eggGroupArray, this, $(this).parent().find('select').val(), 'findEggGroup', obj.EGG_GROUPS_NAME)
             obj.saveSettings();
             obj.customSearch();
         }));
@@ -208,7 +226,7 @@ class PublicFieldsPage extends Page {
         /////////////////////////////////////////////////
         //////////////////// sorting ////////////////////
         /////////////////////////////////////////////////
-        if (this.settings.fieldByBerry === true) { //sort field by berries
+        if (this.settings[this.SORT_BY_BERRY] === true) { //sort field by berries
             $('.fieldmon').removeClass("qolSortMiddle");
             $('.field').removeClass("qolGridField");
             $('.fieldmon').removeClass("qolGridPokeSize");
@@ -233,7 +251,7 @@ class PublicFieldsPage extends Page {
                 $('#field_field [data-flavour*="bitter-"]').addClass("qolBitterBerry");
             }
         }
-        else if (this.settings.fieldByMiddle === true) { //sort field in the middle
+        else if (this.settings[this.SORT_BY_MIDDLE] === true) { //sort field in the middle
             $('#field_field [data-flavour*="any-"]').removeClass("qolAnyBerry");
             $('#field_field [data-flavour*="sour-"]').removeClass("qolSourBerry");
             $('#field_field [data-flavour*="spicy-"]').removeClass("qolSpicyBerry");
@@ -246,7 +264,7 @@ class PublicFieldsPage extends Page {
 
             $('.fieldmon').addClass("qolSortMiddle");
         }
-        else if (this.settings.fieldByGrid === true) { //sort field in a grid
+        else if (this.settings[this.SORT_BY_GRID] === true) { //sort field in a grid
             $('#field_field [data-flavour*="any-"]').removeClass("qolAnyBerry");
             $('#field_field [data-flavour*="sour-"]').removeClass("qolSourBerry");
             $('#field_field [data-flavour*="spicy-"]').removeClass("qolSpicyBerry");
@@ -273,9 +291,9 @@ class PublicFieldsPage extends Page {
         }
 
         //Pokémon click counter
-        if (this.settings.fieldClickCount === false) {
+        if (this.settings.clickCount === false) {
             $('#pokemonclickcount').remove();
-        } else if (this.settings.fieldClickCount === true) {
+        } else if (this.settings.clickCount === true) {
             let pokemonFed = $(".fieldmon").map(function() { return $(this).attr("data-fed"); }).get();
 
             let pokemonClicked = 0;
@@ -366,7 +384,7 @@ class PublicFieldsPage extends Page {
         return arr;
     }
     fieldAddTextField() {
-        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'fieldCustom', 'removeTextField')
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeTextField')
         let numberDiv = $('#searchkeys>div').length;
         $('#searchkeys').append(theField);
         $('.numberDiv').removeClass('numberDiv').addClass(""+numberDiv+"");
@@ -375,7 +393,7 @@ class PublicFieldsPage extends Page {
         this.customArray = $.grep(this.customArray, function(value) { //when textfield is removed, the value will be deleted from the localstorage
             return value != key;
         });
-        this.settings.fieldCustom = this.customArray.toString()
+        this.settings.findCustom = this.customArray.toString()
 
         this.saveSettings();
         $(byebye).parent().remove();

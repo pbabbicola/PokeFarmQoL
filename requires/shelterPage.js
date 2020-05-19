@@ -1,10 +1,7 @@
 class ShelterPage extends Page {
     constructor() {
         super('QoLShelter', {
-            findCustom: "",
-            findType: "",
-            findTypeEgg: true,
-            findTypePokemon: false,
+            // checkboxes
             findNewEgg: true,
             findNewPokemon: true,
             findShiny: true,
@@ -16,16 +13,27 @@ class ShelterPage extends Page {
             findStarter: true,
             findCustomSprite: true,
             findReadyToEvolve: false,
+            // types
+            // format: [type1|[[E]][[P]], type2|[[E]][[P]]]
+            findType: "",
+            // genders
             findMale: true,
             findFemale: true,
             findNoGender: true,
+            // custom search
+            findCustom: "",
             customEgg: true,
             customPokemon: true,
             customPng: false,
+            // sort
             shelterGrid: true,
         }, '/shelter')
-        this.customArray = [];
-        this.typeArray = [];
+        // this.customArray = [];
+        // this.typeArray = [];
+
+        this.SEARCH_FOR_EGG_MARKER = "[E]"
+        this.SEARCH_FOR_PKM_MARKER = "[P]"
+        
         const obj = this
         this.observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
@@ -45,15 +53,17 @@ class ShelterPage extends Page {
 
         document.querySelector('#sheltercommands').insertAdjacentHTML('beforebegin', '<div id="sheltersuccess"></div>');
 
-        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
+        // const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield')
+        // const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
+        //                                      'removeTypeSearch', 'fieldTypes', 'typeArray');
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-                                             'removeTypeSearch', 'fieldTypes', 'typeArray');
+                                                'removeTypeSearch', 'fieldTypes')
+        const customArray = this.settings.findCustom.split(',')
+        const typeArray = this.settings.findType.split(',');
 
-        this.customArray = this.settings.findCustom.split(',');
-        this.typeArray = this.settings.findType.split(',');
-
-        Helpers.setupFieldArrayHTML(this.customArray, 'searchkeys', theField, 'numberDiv')
-        Helpers.setupFieldArrayHTML(this.typeArray, 'typeTypes', theType, 'typeNumber')
+        Helpers.setupFieldArrayHTML(customArray, 'searchkeys', theField, 'numberDiv')
+        Helpers.setupFieldArrayHTML(typeArray, 'typeTypes', theType, 'typeNumber')
 
         $('[data-shelter=reload]').addClass('customSearchOnClick');
         $('[data-shelter=whiteflute]').addClass('customSearchOnClick');
@@ -152,16 +162,19 @@ class ShelterPage extends Page {
         }));
     }
     addTextField() {
-        const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField', 'customArray')
+        // const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField', 'customArray')
+        const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField')
+        
         let numberDiv = $('#searchkeys>div').length;
         $('#searchkeys').append(theField);
         $('.numberDiv').removeClass('numberDiv').addClass(""+numberDiv+"");
     }
     removeTextField(byebye, key) {
-        this.customArray = $.grep(this.customArray, function(value) { //when textfield is removed, the value will be deleted from the localstorage
+        let customArray = this.settings.findCustom.split(',')
+        customArray = $.grep(customArray, function(value) {
             return value != key;
         });
-        this.settings.findCustom = this.customArray.toString()
+        this.settings.findCustom = customArray.toString()
 
         $(byebye).parent().remove();
 
@@ -172,17 +185,20 @@ class ShelterPage extends Page {
         }
     }
     addTypeList() {
+        // const theList = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
+        //                                      'removeTypeSearch', 'fieldTypes', 'typeArray');
         const theList = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-                                             'removeTypeSearch', 'fieldTypes', 'typeArray');
+                                                'removeTypeSearch', 'fieldTypes')
         let numberTypes = $('#typeTypes>div').length;
         $('#typeTypes').append(theList);
         $('.typeNumber').removeClass('typeNumber').addClass(""+numberTypes+"");
     }
     removeTypeList(byebye, key) {
-        this.typeArray = $.grep(this.typeArray, function(value) {
+        let typeArray = this.settings.findType.split(',')
+        typeArray = $.grep(typeArray, function(value) {
             return value != key;
         });
-        this.settings.findType = this.typeArray.toString()
+        this.settings.findType = typeArray.toString()
 
         $(byebye).parent().remove();
 
@@ -245,8 +261,10 @@ class ShelterPage extends Page {
             $(readyBigImg[i]).addClass('shelterfoundme');
         }
 
-        let imgResult = readyBigImg.length + " " + "ready to evolve"
-        this.insertShelterFoundDiv(readyBigImg.length, imgResult, "")
+        if(readyBigImg.length) {
+            let imgResult = readyBigImg.length + " " + "ready to evolve"
+            this.insertShelterFoundDiv(readyBigImg.length, imgResult, "")
+        }
 
     }
 
@@ -360,11 +378,13 @@ class ShelterPage extends Page {
         }
 
         //loop to find all the custom search parameters
-        let customSearchAmount = this.customArray.length;
+        let customArray = this.settings.findCustom.split(',')
+        // let customSearchAmount = this.customArray.length;
+        let customSearchAmount = customArray.length
         const heartPng = `<img src="//pfq-static.com/img/pkmn/heart_1.png/t=1427152952">`;
         const eggPng = `<img src="//pfq-static.com/img/pkmn/egg.png/t=1451852195">`;
         for (let i = 0; i < customSearchAmount; i++) {
-            let value = this.customArray[i];
+            let value = customArray[i];
             if (value != "") {
                 //custom pokemon search
                 if (this.settings.customPokemon === true) {
@@ -440,17 +460,20 @@ class ShelterPage extends Page {
         }
 
         //loop to find all the types
-
-        const filteredTypeArray = this.typeArray.filter(v=>v!='');
+        let typeArray = this.settings.findType.split(',')
+        const filteredTypeArray = typeArray.filter(v=>v!='');
 
         if (filteredTypeArray.length > 0) {
             for (let i = 0; i < filteredTypeArray.length; i++) {
-                let value = filteredTypeArray[i];
-                let foundType = GLOBALS.SHELTER_TYPE_TABLE[GLOBALS.SHELTER_TYPE_TABLE.indexOf(value) + 2];
+                const entry = filteredTypeArray[i];
+                const value = entry.substring(0, entry.indexOf("|"))
+                const findTypeEgg = (entry.includes(obj.SEARCH_FOR_EGG_MARKER)) ? true : false;
+                const findTypePokemon = (entry.includes(obj.SEARCH_FOR_PKM_MARKER)) ? true : false;
+                const foundType = GLOBALS.SHELTER_TYPE_TABLE[GLOBALS.SHELTER_TYPE_TABLE.indexOf(value) + 2];
 
                 let selected = undefined;
                 let typePokemonNames = [];
-                if (this.settings.findTypeEgg === true) {
+                if (findTypeEgg === true) {
                     typePokemonNames = [];
                     selected = $('#shelterarea>.tooltip_content:contains("Egg")')
                     selected.each(function() {
@@ -472,7 +495,7 @@ class ShelterPage extends Page {
                     this.insertShelterTypeFoundDiv(typePokemonNames.length, foundType, 'egg', typePokemonNames)
                 }
 
-                if (this.settings.findTypePokemon === true) {
+                if (findTypePokemon === true) {
                     typePokemonNames = [];
                     selected = $('#shelterarea>.tooltip_content').not(':contains("Egg")')
                     selected.each(function() {
