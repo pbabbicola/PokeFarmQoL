@@ -30,13 +30,14 @@ let Helpers = (function Helpers() {
             }
         }, // toggleSetting
 
-        setupFieldArrayHTML(arr, id, div, cls) {
+        setupFieldArrayHTML(arr, id, div, cls, findCls, clsPrefix) {
+            if(clsPrefix === undefined) { clsPrefix = "" }
             let n = arr.length;
             for(let i = 0; i < n; i++) {
                 let rightDiv = i + 1;
                 let rightValue = arr[i];
                 $(`#${id}`).append(div);
-                $(`.${cls}`).removeClass(cls).addClass(""+rightDiv+"").find('.qolsetting').val(rightValue);
+                $(`.${cls}`).removeClass(cls).addClass(clsPrefix+rightDiv+"").find(`.${findCls}`).val(rightValue);
             }
         },
 
@@ -91,8 +92,9 @@ let Helpers = (function Helpers() {
         },
 
         selectSearchDiv(cls, name, data_key, options, id, divParent, array_name) {
-            return `<div class='${cls}'> <select name='${name}' class="qolsetting" data-key='${data_key}' ` +
-                `array-name='${array_name}'> ${options} </select>` +
+            return `<div class='${cls}'> <select name='${name}' class="qolselect" data-key='${data_key}' ` +
+                ((array_name !== undefined) ? `array-name='${array_name}'` : "") +
+                `> ${options} </select>` +
                 `<input type='button' value='Remove' id='${id}'>` +
                 `<label><input type="checkbox" id='findMatchingEgg'>Eggs</label>` +
                 `<label><input type="checkbox" id='findMatchingPokemon'>Pokemon</label>` +
