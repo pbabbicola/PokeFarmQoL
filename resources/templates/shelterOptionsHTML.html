@@ -74,9 +74,29 @@
   <button type="button" class="accordian"><b>Search on Types</b></button>
   <div class="accordianPanel">
     <p>Select which types of Pokemon you wish to find</p>
+    <hr>
+    <p>Use these two checkboxes to search for eggs or Pokemon of all types in the list</p>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <label>
+              <input type="checkbox" class="qolsetting" data-key="findTypeEggs"/>Eggs
+            </label>
+          </td>
+          <td>
+            <label>
+              <input type="checkbox" class="qolsetting" data-key="findTypePokemon"/>Pokemon
+            </label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <hr>
+    <p>Use checkboxes next to each type to enable searching for eggs or Pokemon of each type individually</p>
     <input type='button' value='Add type' id='addTypeSearch'>
     <div id="typeTypes">
-      <div class='0'></div>
+      <div class='type0'></div>
     </div>
   </div>
   <button type="button" class="accordian"><b>Search on Genders</b></button>
@@ -138,7 +158,7 @@
     <p>Search Keys</p>
     <input type='button' value='Add searchfield' id='addTextField'>
     <div id="searchkeys">
-      <div class='0'></div>
+      <div class='search0'></div>
     </div>
   </div>
 </div>
