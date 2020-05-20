@@ -13,26 +13,38 @@ class ShelterPage extends Page {
             findStarter: true,
             findCustomSprite: true,
             findReadyToEvolve: false,
-            // types
-            // format: [type1|[[E]][[P]], type2|[[E]][[P]]]
-            findType: "",
+            ///////////////////////////////////////////////
             // genders
             findMale: true,
             findFemale: true,
             findNoGender: true,
+            ///////////////////////////////////////////////
             // custom search
             findCustom: "",
             customEgg: true,
             customPokemon: true,
             customPng: false,
+            ///////////////////////////////////////////////
             // sort
             shelterGrid: true,
         }, '/shelter')
         // this.customArray = [];
         // this.typeArray = [];
 
+        this.FIND_MATCHING_EGG = "findMatchingEgg"
+        this.FIND_MATCHING_PKM = "findMatchingPokemon"
         this.SEARCH_FOR_EGG_MARKER = "[E]"
         this.SEARCH_FOR_PKM_MARKER = "[P]"
+
+        ///////////////////////////////////////////////
+        // types
+        // format: [type1|[[E]][[P]], type2|[[E]][[P]]]
+        this.FIND_TYPE_EGGS = "findTypeEggs"
+        this.FIND_TYPE_PKMS = "findTypePokemon"
+        this.settings.findType = ""
+        // these two are used to enable searching for all types
+        this.settings[this.FIND_TYPE_EGGS] = false
+        this.settings[this.FIND_TYPE_PKMS] = false
         
         const obj = this
         this.observer = new MutationObserver(function(mutations) {
@@ -54,16 +66,27 @@ class ShelterPage extends Page {
         document.querySelector('#sheltercommands').insertAdjacentHTML('beforebegin', '<div id="sheltersuccess"></div>');
 
         // const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield', 'customArray')
-        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeShelterTextfield')
-        // const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-        //                                      'removeTypeSearch', 'fieldTypes', 'typeArray');
+        const theField = Helpers.textSearchDivWithCheckboxes('numberDiv', 'findCustom', 'removeTextField')
         const theType = Helpers.selectSearchDiv('typeNumber', 'types', 'findType', GLOBALS.TYPE_OPTIONS,
-                                                'removeTypeSearch', 'fieldTypes')
+                                             'removeTypeSearch', 'fieldTypes', 'findType');
         const customArray = this.settings.findCustom.split(',')
-        const typeArray = this.settings.findType.split(',');
+        let typeArray = this.settings.findType.split(',');
 
-        Helpers.setupFieldArrayHTML(customArray, 'searchkeys', theField, 'numberDiv')
-        Helpers.setupFieldArrayHTML(typeArray, 'typeTypes', theType, 'typeNumber')
+        Helpers.setupFieldArrayHTML(customArray, 'searchkeys', theField, 'numberDiv', 'qolsetting', 'search')
+
+        // strip out egg/pokemon markers so setupFieldArray will work
+        let justTypes = typeArray.map((t) => {return t.replace(this.SEARCH_FOR_EGG_MARKER,'').replace(this.SEARCH_FOR_PKM_MARKER,'')})
+        Helpers.setupFieldArrayHTML(justTypes, 'typeTypes', theType, 'typeNumber', 'qolselect', 'type')
+        // setup the type checkboxes
+        for(let i = 0; i < typeArray.length; i++) {
+            let elem = typeArray[i]
+            if(elem.includes(this.SEARCH_FOR_EGG_MARKER)) {
+                this.toggleCheckboxForType(i, this.SEARCH_FOR_EGG_MARKER, true)
+            }
+            if(elem.includes(this.SEARCH_FOR_PKM_MARKER)) {
+                this.toggleCheckboxForType(i, this.SEARCH_FOR_PKM_MARKER, true)
+            }
+        }
 
         $('[data-shelter=reload]').addClass('customSearchOnClick');
         $('[data-shelter=whiteflute]').addClass('customSearchOnClick');
@@ -116,6 +139,7 @@ class ShelterPage extends Page {
                                $(this).parent().parent().attr('class'),
                                $(this).parent().attr('class'),
                                (this.hasAttribute('array-name') ? this.getAttribute('array-name') : ''));
+            obj.shelterSpecificSettingsChange(this)
             obj.customSearch();
             obj.saveSettings();
         }));
@@ -139,6 +163,7 @@ class ShelterPage extends Page {
 
         $(document).on('click', '#addTypeSearch', (function() { //add shelter type list
             obj.addTypeList();
+            obj.saveSettings();
             obj.customSearch();
         }));
 
@@ -160,11 +185,92 @@ class ShelterPage extends Page {
                 panel.style.display = "block";
             }
         }));
+
+        $(document).on('click', `#${obj.FIND_MATCHING_EGG}`, (function() {
+            obj.findAndToggleTypeCheckbox(this, obj.SEARCH_FOR_EGG_MARKER)
+            obj.customSearch();
+            obj.saveSettings();
+        }))
+
+        $(document).on('click', `#${obj.FIND_MATCHING_PKM}`, (function() {
+            obj.findAndToggleTypeCheckbox(this, obj.SEARCH_FOR_PKM_MARKER)
+            obj.customSearch();
+            obj.saveSettings();
+        }));
+
+        $(document).on('input', '.qolselect', (function() {
+            let setting = this.getAttribute('array-name')
+            if(setting === "findType") {
+                obj.findAndUpdateTypeSelect(this);
+            }
+            obj.customSearch();
+            obj.saveSettings();
+        }));
     }
+    findAndUpdateTypeSelect(select) {
+        let array = this.settings.findType.split(',')
+        let index = parseInt(select.parentNode.className.substring("type".length)) - 1
+        let elem = array[index]
+        let typeIndex = select.value
+        let newType = typeIndex
+        if(elem.includes("[")) {
+            // replace current type with new type
+            let currentType = (elem.includes("[") ? elem.substring(0, elem.indexOf("[")) : elem)
+            array[index] = newType + elem.substring(elem.indexOf("["))
+        } else {
+            array[index] = newType
+        }
+        this.settings.findType = array.join(',')
+        this.saveSettings();
+    }
+    findAndToggleTypeCheckbox(checkbox, eggOrPokemonMarker) {
+        let array = this.settings.findType.split(',')
+        let index = parseInt($(checkbox).parent().parent()[0].className.substring("type".length)) - 1
+        array[index] = this.toggleMarkerSettingForType(array[index], eggOrPokemonMarker, checkbox.checked)
+        this.settings.findType = array.join(',')
+        this.saveSettings()
+    }
+    toggleCheckboxForAllTypes(eggOrPokemonMarker, checked) {
+        let array = this.settings.findType.split(',')
+        for(let i = 0; i < array.length; i++) {
+            array[i] = this.toggleMarkerSettingForType(array[i], eggOrPokemonMarker, checked)
+            this.toggleCheckboxForType(i, eggOrPokemonMarker, checked)
+        } // for
+        this.settings.findType = array.join(',')
+        this.saveSettings()
+    }
+    toggleMarkerSettingForType(typeSettingString, eggOrPokemonMarker, checked) {
+        let value = typeSettingString
+        if(value === "") { value = "None" }
+        if(checked && !value.includes(eggOrPokemonMarker)) {
+            value += eggOrPokemonMarker
+        } else if(!checked && value.includes(eggOrPokemonMarker)) {
+            value = value.replace(eggOrPokemonMarker, "")
+        }
+        return value;
+    }
+    toggleCheckboxForType(index, eggOrPokemonMarker, checked) {
+        const id = (eggOrPokemonMarker === this.SEARCH_FOR_EGG_MARKER) ? this.FIND_MATCHING_EGG :
+                   (eggOrPokemonMarker === this.SEARCH_FOR_PKM_MARKER) ? this.FIND_MATCHING_PKM :
+                   console.error('Invalid value for Egg/Pokemon type search marker: ' + eggOrPokemonMarker)
+        const checkbox = $(`.type${index+1} input#${id}`)
+        checkbox.prop('checked', checked)
+    }
+    shelterSpecificSettingsChange(elem) {
+        let datakey = elem.getAttribute('data-key')
+
+        // toggle individual type checkboxes based on overall checkboxes
+        if(datakey === this.FIND_TYPE_EGGS || datakey === this.FIND_TYPE_PKMS) {
+            let checked = elem.checked
+            const marker = (datakey === this.FIND_TYPE_EGGS) ? this.SEARCH_FOR_EGG_MARKER : this.SEARCH_FOR_PKM_MARKER
+            this.toggleCheckboxForAllTypes(marker, checked)
+        }
+    }
+
     addTextField() {
         // const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField', 'customArray')
         const theField = Helpers.textSearchDiv('numberDiv', 'findCustom', 'removeTextField')
-        
+
         let numberDiv = $('#searchkeys>div').length;
         $('#searchkeys').append(theField);
         $('.numberDiv').removeClass('numberDiv').addClass(""+numberDiv+"");
@@ -191,7 +297,9 @@ class ShelterPage extends Page {
                                                 'removeTypeSearch', 'fieldTypes')
         let numberTypes = $('#typeTypes>div').length;
         $('#typeTypes').append(theList);
-        $('.typeNumber').removeClass('typeNumber').addClass(""+numberTypes+"");
+        $('.typeNumber').removeClass('typeNumber').addClass("type"+numberTypes+"");
+
+        this.settings.findType += ','
     }
     removeTypeList(byebye, key) {
         let typeArray = this.settings.findType.split(',')
@@ -466,10 +574,13 @@ class ShelterPage extends Page {
         if (filteredTypeArray.length > 0) {
             for (let i = 0; i < filteredTypeArray.length; i++) {
                 const entry = filteredTypeArray[i];
-                const value = entry.substring(0, entry.indexOf("|"))
+                const value = entry.includes("[") ? entry.substring(0, entry.indexOf("[")) : entry
                 const findTypeEgg = (entry.includes(obj.SEARCH_FOR_EGG_MARKER)) ? true : false;
                 const findTypePokemon = (entry.includes(obj.SEARCH_FOR_PKM_MARKER)) ? true : false;
-                const foundType = GLOBALS.SHELTER_TYPE_TABLE[GLOBALS.SHELTER_TYPE_TABLE.indexOf(value) + 2];
+                const foundType = (value === "" || value === "None") ? false :
+                    GLOBALS.SHELTER_TYPE_TABLE[GLOBALS.SHELTER_TYPE_TABLE.indexOf(value) + 2];
+
+                if(!foundType) { continue; }
 
                 let selected = undefined;
                 let typePokemonNames = [];
