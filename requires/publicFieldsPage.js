@@ -1,8 +1,5 @@
 class PublicFieldsPage extends Page {
     constructor() {
-        const SORT_BY_BERRY = 'findByBerry'
-        const SORT_BY_MIDDLE = 'findByMiddle'
-        const SORT_BY_GRID = 'findByGrid'
         const settings = {
             // checkboxes
             /* findNewEgg: true, */
@@ -36,16 +33,14 @@ class PublicFieldsPage extends Page {
             /* customItem: true, */
         }
 
-        // sort settings
-        settings[SORT_BY_BERRY] = false
-        settings[SORT_BY_MIDDLE] = false
-        settings[SORT_BY_GRID] = false
-
         super('QoLPublicFields', settings, 'fields/');
-
-        this.SORT_BY_BERRY = SORT_BY_BERRY
-        this.SORT_BY_MIDDLE = SORT_BY_MIDDLE
-        this.SORT_BY_GRID = SORT_BY_GRID
+        this.SORT_BY_BERRY = 'findByBerry'
+        this.SORT_BY_MIDDLE = 'findByMiddle'
+        this.SORT_BY_GRID = 'findByGrid'
+        // sort settings
+        settings[this.SORT_BY_BERRY] = false
+        settings[this.SORT_BY_MIDDLE] = false
+        settings[this.SORT_BY_GRID] = false
 
         this.customArray = [];
         this.typeArray = [];

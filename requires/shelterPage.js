@@ -304,7 +304,10 @@ class ShelterPage extends Page {
     removeTypeList(byebye, key) {
         let typeArray = this.settings.findType.split(',')
         typeArray = $.grep(typeArray, function(value) {
-            return value != key;
+            let v = (value.includes("[")) ? value.substring(0, value.indexOf("[")) : value;
+            return ((v !== key) &&
+                    (v !== "") &&
+                    (!v.includes("None")));
         });
         this.settings.findType = typeArray.toString()
 
@@ -588,7 +591,7 @@ class ShelterPage extends Page {
                     typePokemonNames = [];
                     selected = $('#shelterarea>.tooltip_content:contains("Egg")')
                     selected.each(function() {
-                        let searchPokemon = ($(this).text().split(' ')[0]);
+                        let searchPokemon = $(this).text().split('Egg')[0].trim();
                         let searchPokemonIndex = dexData.indexOf('"'+searchPokemon+'"');
                         let searchTypeOne = dexData[searchPokemonIndex + 1];
                         let searchTypeTwo = dexData[searchPokemonIndex + 2];
@@ -603,7 +606,9 @@ class ShelterPage extends Page {
                         $(shelterBigImg).addClass('shelterfoundme');
                     }
 
-                    this.insertShelterTypeFoundDiv(typePokemonNames.length, foundType, 'egg', typePokemonNames)
+                    if(typePokemonNames.length) {
+                        this.insertShelterTypeFoundDiv(typePokemonNames.length, foundType, 'egg', typePokemonNames)
+                    }
                 }
 
                 if (findTypePokemon === true) {
@@ -625,7 +630,9 @@ class ShelterPage extends Page {
                         $(shelterBigImg).addClass('shelterfoundme');
                     }
 
-                    this.insertShelterTypeFoundDiv(typePokemonNames.length, foundType, 'Pokemon', typePokemonNames)
+                    if(typePokemonNames.length) {
+                        this.insertShelterTypeFoundDiv(typePokemonNames.length, foundType, 'Pokemon', typePokemonNames)
+                    }
                 }
             }
         } // filteredTypeArray
