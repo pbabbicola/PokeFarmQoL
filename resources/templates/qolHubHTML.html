@@ -146,7 +146,7 @@
                           <li>Userscript has it's own settings page now and removed itself from the farm tab. Altogether with a change log. Yeeey</li><br>
                           <li>Moved the shelter search menu for better access and view.</li><br>
                           <li>Changed some code around to make it easier to implement new features. Like how the user settings are safed and stuff.</li><br>
-                          
+
                         </ul>
                       </li>
                       <li class="expandlist"><h3 class="slidermenu qolChangeLogHead">V 1.0.0 - 08/01/2019</h3>
@@ -177,6 +177,7 @@
                     <span class="qolDexUpdateProgress">Complete!</span>
                   </td>
                 </tr>
+                <tr>
                   <td colspan="2" class="qolAllSettings">
                     <h3 class="qolHubHead">Css Settings</h3>
                   </td>
@@ -190,7 +191,32 @@
                   <td colspan="2" class="qolAllSettings">
                     <div class='textareahub'></div>
                   </td>
-                <tr>    
+                </tr>
+                <tr>
+                  <td colspan="2" class="qolAllSettings">
+                    <h3 class="qolHubHead">Debugging Corner</h3>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="qolAllSettings">
+                    <span>Use these controls to reset the settings for a particular page back to its defaults</span><br>
+                    <span><b>Page Select</b></span>
+                    <select name='Page Select' class="qolHubResetSettingsSelect" data-key="resetPageSettings">
+                      <option value="none">None</option>
+                      <option value="fishing">Fishing</option>
+                      <option value="shelter">Shelter</option>
+                      <option value="publicFields">Public Fields</option>
+                      <option value="privateFields">Private Fields</option>
+                      <option value="daycare">Daycare</option>
+                      <option value="lab">Lab</option>
+                      <option value="multiuser">Multiuser</option>
+                    </select>
+                    <input type='button' value="Reset Page Settings" id="resetPageSettings">
+                    <br><br>
+                    <span>Having issues with the "Update Pokedex" button or the Ready-to-Evolve feature in the Shelter? Use this button to erase the cached pokedex info, then use the <b>Update Pokedex</b> button to reload the pokedex.</span>
+                    <input type='button' value="Clear Cached Dex" id="clearCachedDex">
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
