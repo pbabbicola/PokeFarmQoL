@@ -3,35 +3,35 @@
 // @namespace    https://github.com/jpgualdarrama/
 // @author       Bentomon
 // @homepage     https://github.com/jpgualdarrama/PokeFarmQoL
-// @downloadURL  https://github.com/jpgualdarrama/PokeFarmQoL/raw/master/Poke-Farm-QoL.user.js
+// @downloadURL  https://github.com/jpgualdarrama/PokeFarmQoL/raw/merge_issue_34_into_master/Poke-Farm-QoL.user.js
 // @description  Quality of Life changes to Pokéfarm!
 // @version      1.3.58
 // @match        https://pokefarm.com/*
 // @require      http://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.min.js
 // @require      https://cdn.rawgit.com/omichelsen/compare-versions/v3.1.0/index.js
-// @resource     QolHubHTML            https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/qolHubHTML.html
-// @resource     shelterSettingsHTML    https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/shelterOptionsHTML.html
-// @resource     evolveFastHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/evolveFastHTML.html
-// @resource     labOptionsHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/labOptionsHTML.html
-// @resource     fieldSortHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/fieldSortHTML.html
-// @resource     fieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/fieldSearchHTML.html
-// @resource     privateFieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/privateFieldSearchHTML.html
-// @resource     QoLCSS                 https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/css/pfqol.css
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/helpers.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/dexUtilities.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/globals.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/basePage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/shelterPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/privateFieldsPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/publicFieldsPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/labPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/fishingPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/multiuserPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/farmPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/daycarePage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/dexPage.js
-// @updateURL    https://github.com/jpgualdarrama/PokeFarmQoL/raw/master/Poke-Farm-QoL.user.js
+// @resource     QolHubHTML            https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/qolHubHTML.html
+// @resource     shelterSettingsHTML    https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/shelterOptionsHTML.html
+// @resource     evolveFastHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/evolveFastHTML.html
+// @resource     labOptionsHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/labOptionsHTML.html
+// @resource     fieldSortHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/fieldSortHTML.html
+// @resource     fieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/fieldSearchHTML.html
+// @resource     privateFieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/templates/privateFieldSearchHTML.html
+// @resource     QoLCSS                 https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/resources/css/pfqol.css
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/helpers.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/dexUtilities.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/globals.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/basePage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/shelterPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/privateFieldsPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/publicFieldsPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/labPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/fishingPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/multiuserPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/farmPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/daycarePage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_34_into_master/requires/dexPage.js
+// @updateURL    https://github.com/jpgualdarrama/PokeFarmQoL/raw/merge_issue_34_into_master/Poke-Farm-QoL.user.js
 // @connect      github.com
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
@@ -174,6 +174,13 @@
                         }
                     }
                 },
+                clearPageSettings(pageName) {
+                    if(! (pageName in PAGES) ) {
+                        console.error(`Could not proceed with clearing page settings. Page ${pageName} not found in list of pages`)
+                    } else {
+                        PAGES[pageName][0].resetSettings();
+                    }
+                },
                 setupHTML() { // injects the HTML changes from TEMPLATES into the site
                     // Header link to Userscript settings
                     document.querySelector("li[data-name*='Lucky Egg']").insertAdjacentHTML('afterend', TEMPLATES.qolHubLinkHTML);
@@ -229,7 +236,7 @@
                         'loading Settings'    : fn.backwork.loadSettings,
                         'checking for update' : fn.backwork.checkForUpdate,
                         'setting up HTML'     : fn.backwork.setupHTML,
-			'populating Settings' : fn.backwork.populateSettingsPage,
+                        'populating Settings' : fn.backwork.populateSettingsPage,
                         'setting up CSS'      : fn.backwork.setupCSS,
                         'setting up Observers': fn.backwork.setupObservers,
                         'setting up Handlers' : fn.backwork.setupHandlers,
@@ -307,7 +314,14 @@
                             }
                         }
                     }
+                },
+
+                clearPageSettings(pageName) {
+                    if(pageName !== "None") { // "None" matches option in HTML
+                        fn.backwork.clearPageSettings(pageName)
+                    }
                 }
+
             }, // end of API
         }; // end of fn
 
@@ -410,6 +424,16 @@
                 progressSpan.textContent = "Complete!"
             }
         }) // loadDexPage
+    }));
+
+    $(document).on('click', '#resetPageSettings', (function() {
+        const page = $(this).parent().find('select').val()
+        PFQoL.clearPageSettings(page)
+    }));
+
+    $(document).on('click', '#clearCachedDex', (function() {
+        localStorage.removeItem('QoLEvolveByLevel')
+        localStorage.removeItem('QoLDexIDsCache')
     }));
 
     $(document).on('click', 'h3.slidermenu', (function() { //show hidden li in change log
