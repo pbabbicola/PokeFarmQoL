@@ -175,7 +175,6 @@
                     }
                 },
                 clearPageSettings(pageName) {
-                    console.log('fn.backwork.clearPageSettings - ', pageName)
                     if(! (pageName in PAGES) ) {
                         console.error(`Could not proceed with clearing page settings. Page ${pageName} not found in list of pages`)
                     } else {
@@ -318,7 +317,6 @@
                 },
 
                 clearPageSettings(pageName) {
-                    console.log(pageName)
                     if(pageName !== "None") { // "None" matches option in HTML
                         fn.backwork.clearPageSettings(pageName)
                     }
@@ -430,12 +428,12 @@
 
     $(document).on('click', '#resetPageSettings', (function() {
         const page = $(this).parent().find('select').val()
-        console.log("Clicked resetPageSettings, page = ", page)
         PFQoL.clearPageSettings(page)
     }));
 
     $(document).on('click', '#clearCachedDex', (function() {
-        console.log("Clicked clearCachedDex")
+        localStorage.removeItem('QoLEvolveByLevel')
+        localStorage.removeItem('QoLDexIDsCache')
     }));
 
     $(document).on('click', 'h3.slidermenu', (function() { //show hidden li in change log
