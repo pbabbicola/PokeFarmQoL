@@ -179,7 +179,7 @@
                     if(! (pageName in PAGES) ) {
                         console.error(`Could not proceed with clearing page settings. Page ${pageName} not found in list of pages`)
                     } else {
-                        PAGES[pageName].resetSettings();
+                        PAGES[pageName][0].resetSettings();
                     }
                 },
                 setupHTML() { // injects the HTML changes from TEMPLATES into the site
