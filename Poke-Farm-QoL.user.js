@@ -419,6 +419,43 @@
 
                     GLOBALS.EVOLVE_BY_LEVEL_LIST = evolveByLevelList
                     localStorage.setItem('QoLEvolveByLevel', JSON.stringify(evolveByLevelList))
+
+                    // store the maximum depth of the evolution tree for each pokemon
+                    // for highlighting each pokemon based on how fully evolved they are
+                    // https://github.com/jpgualdarrama/PokeFarmQoL/issues/11
+                    let maxEvoTreeDepth = {}
+                    for(let pokemon in parsed_families) {
+                        let evolutions = parsed_families[pokemon]
+                        let sources_list = evolutions.map( (el) => { return el.source } )
+
+                        if(evolutions.length) {
+                            let evo_tree = {}
+                            let last_target = evolutions[evolutions.length-1].target
+                            for(let i = evolutions.length - 1; i >= 0; i--) {
+                                let evolution = evolutions[i];
+                                let source = evolution.source;
+                                let target = evolution.target;
+                                if(sources_list.indexOf(target) == -1) {
+                                    evo_tree[target] = {}
+                                    evo_tree[target][target] = []
+                                }
+
+                                if(!(source in evo_tree)) {
+                                    evo_tree[source] = {}
+                                    evo_tree[source][source] = [evo_tree[target]];
+                                } else {
+                                    evo_tree[source][source].push(evo_tree[target]);
+                                }
+                            }
+
+                            console.log('break')
+                            let final_tree = evo_tree[sources_list[0]]
+
+                        } else {
+                            maxEvoTreeDepth[pokemon] = 0
+                        }
+                    }
+                    
                     progressSpan.textContent = "Complete!"
                 }) // loadEvolutionTrees
             } // if dexNumbers.length > 0
