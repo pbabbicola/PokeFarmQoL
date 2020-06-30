@@ -426,15 +426,31 @@
                     let maxEvoTreeDepth = {}
                     for(let pokemon in parsed_families) {
                         let evolutions = parsed_families[pokemon]
+
+                        // filter out mega or totem evolutions
+                        for(let i = evolutions.length - 1; i>= 0; i--) {
+                            if(evolutions[i].target.includes("Mega Forme") ||
+                               evolutions[i].target.includes("Totem Forme")) {
+                                evolutions.splice(i);
+                            }
+                        }
                         let sources_list = evolutions.map( (el) => { return el.source } )
+
+                        // don't redo the processing if the root of the tree is already in the list
+                        if(sources_list[0] in maxEvoTreeDepth) {
+                            maxEvoTreeDepth[pokemon] = maxEvoTreeDepth[sources_list[0]];
+                            continue;
+                        }
 
                         if(evolutions.length) {
                             let evo_tree = {}
                             let last_target = evolutions[evolutions.length-1].target
+
                             for(let i = evolutions.length - 1; i >= 0; i--) {
                                 let evolution = evolutions[i];
                                 let source = evolution.source;
                                 let target = evolution.target;
+
                                 if(sources_list.indexOf(target) == -1) {
                                     evo_tree[target] = {}
                                     evo_tree[target][target] = []
@@ -448,14 +464,43 @@
                                 }
                             }
 
-                            console.log('break')
                             let final_tree = evo_tree[sources_list[0]]
+                            let createPaths = function(stack, tree, paths) {
+                                if (tree === null) {
+                                    return
+                                }
+                                let name = Object.keys(tree)[0];
+                                let children = tree[name];
+                                let num_children = children.length;
 
-                        } else {
-                            maxEvoTreeDepth[pokemon] = 0
-                        }
-                    }
-                    
+                                // append this node to the path array
+                                stack.push(name)
+                                if(num_children === 0) {
+                                    // append all of its children
+                                    paths.push(stack.reverse().join('|'));
+                                    stack.reverse()
+                                } else {
+                                    // otherwise try subtrees
+                                    for(let i = 0; i < num_children; i++) {
+                                        createPaths(stack, children[i], paths)
+                                    }
+                                }
+                                stack.pop()
+                            }
+                            let countPathLengths = function(tree) {
+                                let paths = []
+                                createPaths([], tree, paths)
+
+                                return paths.map((p) => { return p.split('|').length })
+                            }
+
+                            // - 1 because there is one less evolution then there are pokemon
+                            maxEvoTreeDepth[pokemon] = Math.max(...countPathLengths(final_tree)) - 1;
+                        } // if evolutions.length
+                    } // for pokemon in parsed_families
+
+                    localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth))
+
                     progressSpan.textContent = "Complete!"
                 }) // loadEvolutionTrees
             } // if dexNumbers.length > 0
