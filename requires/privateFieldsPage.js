@@ -163,6 +163,24 @@ class PrivateFieldsPage extends Page {
                                '<div id="shelterfound">' + name + ((number > 1) ? 's' : '') + ' found ' + img + '</div>')
     }
     */
+    highlightByHowFullyEvolved(pokemon) {
+        const key = 'QoLEvolutionTreeDepth'
+        if(localStorage.getItem(key) !== null) {
+            const evolution_data = JSON.parse(localStorage.getItem(key))
+            if(Object.keys(evolution_data).length > 0) {
+                const evolutions_left = evolution_data[pokemon].remaining
+                const evolution_tree_depth = evolutions_data[pokemon].total
+                const highlighting = 100 - 100*Math.round(evolutions_left / evolution_tree_depth)
+
+                // how to specify transparency for highlighting?
+            } else {
+                console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
+            }
+        } else {
+            console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
+        }
+    }
+
     searchForImgTitle(key) {
         const SEARCH_DATA = GLOBALS.SHELTER_SEARCH_DATA;
         const key_index = SEARCH_DATA.indexOf(key)
