@@ -427,22 +427,29 @@
                     for(let pokemon in parsed_families) {
                         let evolutions = parsed_families[pokemon]
 
-                        // filter out mega or totem evolutions
+                        // handle Mega and Totem formes separately, since they don't count
+                        // towards actual evolutions
+                        // 1. Filter out mega/totem evolutions
+                        // 2. Add mega/totem forms to tree
                         for(let i = evolutions.length - 1; i>= 0; i--) {
                             if(evolutions[i].target.includes("Mega Forme") ||
                                evolutions[i].target.includes("Totem Forme")) {
-                                evolutions.splice(i);
+                                evolutions.splice(i, 1);
                             }
                         }
-                        let sources_list = evolutions.map( (el) => { return el.source } )
-
-                        // don't redo the processing if the root of the tree is already in the list
-                        if(sources_list[0] in maxEvoTreeDepth) {
-                            // data for all evolutions is added when the first pokemon is added
-                            continue;
+                        if(pokemon.includes("Mega Forme") || pokemon.includes("Totem Forme")) {
+                            maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
                         }
 
                         if(evolutions.length) {
+                            let sources_list = evolutions.map( (el) => { return el.source } )
+
+                            // don't redo the processing if the root of the tree is already in the list
+                            if(sources_list[0] in maxEvoTreeDepth) {
+                                // data for all evolutions is added when the first pokemon is added
+                                continue;
+                            }
+
                             let evo_tree = {}
                             let last_target = evolutions[evolutions.length-1].target
 
@@ -524,6 +531,11 @@
                             // maxEvoTreeDepth[pokemon] = Math.max(...parseEvolutionPaths(final_tree)) - 1;
                             // maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
                         } // if evolutions.length
+                        // add pokemon that don't evolve
+                        else {
+                            maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
+                            maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
+                        }
                     } // for pokemon in parsed_families
 
                     localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth))
