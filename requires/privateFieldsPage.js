@@ -164,16 +164,32 @@ class PrivateFieldsPage extends Page {
                                '<div id="shelterfound">' + name + ((number > 1) ? 's' : '') + ' found ' + img + '</div>')
     }
     */
-    highlightByHowFullyEvolved(pokemon) {
+    highlightByHowFullyEvolved(pokemon_elem) {
+        let pokemon = $(pokemon_elem).children('img.big').attr('alt');
+
         const key = 'QoLEvolutionTreeDepth'
         if(localStorage.getItem(key) !== null) {
             const evolution_data = JSON.parse(localStorage.getItem(key))
             if(Object.keys(evolution_data).length > 0) {
-                const evolutions_left = evolution_data[pokemon].remaining
-                const evolution_tree_depth = evolutions_data[pokemon].total
-                const highlighting = 100 - 100*Math.round(evolutions_left / evolution_tree_depth)
+                // if can't find the pokemon directly, try looking for its form data
+                if(!evolution_data[pokemon]) {
+                    const tooltip = Helpers.parseFieldPokemonTooltip($(pokemon_elem).next()[0]);
+                    if(tooltip['forme']) {
+                        pokemon = pokemon + ' [' + tooltip['forme'] + ']'
+                    }
+                }
+                if(!evolution_data[pokemon]) {
+                    console.error(`Private Fields Page - Could not find evolution data for ${pokemon}`);
+                } else {
+                    const evolutions_left = evolution_data[pokemon].remaining
+                    const evolution_tree_depth = evolution_data[pokemon].total
+                    const highlighting = 100*Math.round(evolutions_left / evolution_tree_depth)
 
-                // how to specify transparency for highlighting?
+                    if(highlighting > 0) {
+                        $(pokemon_elem).children('img.big').addClass('privatefoundme');
+                        $(pokemon_elem).children('img.big').css('border-radius', highlighting + '%')
+                    }
+                }
             } else {
                 console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
             }
@@ -241,6 +257,7 @@ class PrivateFieldsPage extends Page {
         }
     }
     customSearch() {
+        const obj = this
         let dexData = GLOBALS.DEX_DATA;
         let bigImgs = document.querySelectorAll('.privatefoundme')
         if(bigImgs !== null) {
@@ -278,6 +295,11 @@ class PrivateFieldsPage extends Page {
                 let itemBigImgs = items.parent().parent().parent().parent().prev().children('img.big')
                 $(itemBigImgs).addClass('privatefoundme');
             }
+        }
+        if(this.settings.fieldNFE === true) {
+            $('.fieldmon').each(function() {
+                obj.highlightByHowFullyEvolved(this)
+            })
         }
 
         const filteredTypeArray = this.typeArray.filter(v=>v!='');
