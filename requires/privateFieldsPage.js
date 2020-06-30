@@ -18,6 +18,7 @@ class PrivateFieldsPage extends Page {
             fieldFemale: true,
             fieldNoGender: true,
             fieldItem: true,
+            fieldNFE: false,
             customItem: true, // unused
             customEgg: true,
             customPokemon: true,
