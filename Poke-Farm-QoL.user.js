@@ -439,6 +439,7 @@
                         // don't redo the processing if the root of the tree is already in the list
                         if(sources_list[0] in maxEvoTreeDepth) {
                             maxEvoTreeDepth[pokemon] = maxEvoTreeDepth[sources_list[0]];
+                            maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
                             continue;
                         }
 
@@ -496,6 +497,7 @@
 
                             // - 1 because there is one less evolution then there are pokemon
                             maxEvoTreeDepth[pokemon] = Math.max(...countPathLengths(final_tree)) - 1;
+                            maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
                         } // if evolutions.length
                     } // for pokemon in parsed_families
 
@@ -518,6 +520,7 @@
     $(document).on('click', '#clearCachedDex', (function() {
         localStorage.removeItem('QoLEvolveByLevel')
         localStorage.removeItem('QoLDexIDsCache')
+        localStorage.removeItem("QoLEvolutionTreeDepth")
     }));
 
     $(document).on('click', 'h3.slidermenu', (function() { //show hidden li in change log
