@@ -151,6 +151,37 @@ class DexUtilities {
         return $.when.apply(undefined, requests)
     } // loadEvolutionTrees
 
+    static preprocessEvolutionData(dexNumbers, trees, progressBar, progressSpan) {
+        let requests = [];
+
+        for(let a = 0; a < trees.length; a++) {
+            let data = trees[a]
+            // because the evolution tree for all the members of a single family will have the same text,
+            // use the text as a key in families
+            // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
+            let ownerDocument = document.implementation.createHTMLDocument('virtual');
+            let tree = $(data, ownerDocument).find('.evolutiontree')[0];
+
+            // IN PROGRESS - parse other forms of current pokemon from form panel and
+            // load data from pages for other forms
+            const form_links = $(data, ownerDocument).find('.formeregistration a')
+            if(form_links.length) {
+                progressBar['max'] = progressBar['max'] + form_links.length
+                form_links.each((k, v) => {
+                    let link = $(v).attr('href');
+                    let r = $.get('https://pokefarm.com/' + link).then((data) => {
+                        progressBar.value = progressBar['value'] + 1
+                        progressSpan.textContent = `Loaded ${progressBar['value']} of ${progressBar['max']} Pokemon`
+                        return {number: link.replace('/dex/', ''), data: data}
+                    })
+                    requests.push(r)
+                });
+            }
+        } // for
+
+        return $.when.apply(undefined, requests)
+    } // preprocessEvolutionData
+
     static parseEvolutionTrees(args) {
         const families = {}
         const flat_families = {}
