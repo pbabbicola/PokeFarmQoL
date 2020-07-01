@@ -165,22 +165,39 @@ class DexUtilities {
             // load data from pages for other forms
             const form_links = $(data, ownerDocument).find('.formeregistration a')
             if(form_links.length) {
-                let all_forms = []
-                $('.formeregistration>ul>li').children(':nth-child(2)').each((k, v) => {
-                    all_forms.push(v.innerText)
-                });
-                let base_pokemon = all_forms[0];
+                // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
+                // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
+                // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
+                // Venusaur and Venusaur [Mega Forme]. This means that exclusives will never have any links in the form panel
+                // and thus will never get into this if statement
+                const name_header = $(data, ownerDocument).find('#dexinfo>h3')[0]
+                const form_i = $(name_header).children('i.small')
+
+                // https://stackoverflow.com/questions/3442394/using-text-to-retrieve-only-text-not-nested-in-child-tags
+                // get text but not children's text
+                let name_text = $(name_header).clone().children().remove().end().text()
+                let name_splits = name_text.split(' ')
+                let base_pokemon_number = name_splits[0].replace('#','').replace(':','')
+                let base_pokemon_name = name_splits[1]
+                let pokemon_name = (form_i.length) ? base_pokemon_name + ' [' + form_i.text() + ']' : base_pokemon_name
 
                 progressBar['max'] = progressBar['max'] + form_links.length
                 form_links.each((k, v) => {
                     let link = $(v).attr('href');
+                    let link_name = v.innerText;
                     let r = $.get('https://pokefarm.com/' + link).then((data) => {
                         progressBar.value = progressBar['value'] + 1
                         progressSpan.textContent = `Loaded ${progressBar['value']} of ${progressBar['max']} Pokemon`
                         return {
-                            base: base_pokemon,
-                            name: base_pokemon + ' [' + v.innerText + ']',
+                            // dex number of the base pokemon
+                            base: base_pokemon_number,
+                            // name of the form. Sometimes the base form shows up as a form in the list (e.g., Venusaur),
+                            // but sometimes it does not (e.g., Eiscue). If the name in the link is the base name,
+                            // just use the base name, but if it isn't, append the link name to the base name
+                            name: (link_name !== base_pokemon_name) ? base_pokemon_name + ' [' + link_name + ']' : link_name,
+                            // dex number of the form
                             number: link.replace('/dex/', ''),
+                            // html
                             data: data
                         }
                     })
