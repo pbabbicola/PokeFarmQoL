@@ -160,7 +160,9 @@ class DexUtilities {
             // use the text as a key in families
             // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
             let ownerDocument = document.implementation.createHTMLDocument('virtual');
-            let tree = $(data, ownerDocument).find('.evolutiontree')[0];
+
+            // TODO - doesn't work for exclusives
+            let base_pokemon = $(data, ownerDocument).find('#dexinfo>h3').text().split(' ')[0].replace('#','').replace(':','')
 
             // IN PROGRESS - parse other forms of current pokemon from form panel and
             // load data from pages for other forms
@@ -172,7 +174,7 @@ class DexUtilities {
                     let r = $.get('https://pokefarm.com/' + link).then((data) => {
                         progressBar.value = progressBar['value'] + 1
                         progressSpan.textContent = `Loaded ${progressBar['value']} of ${progressBar['max']} Pokemon`
-                        return {number: link.replace('/dex/', ''), data: data}
+                        return {base: base_pokemon, number: link.replace('/dex/', ''), data: data}
                     })
                     requests.push(r)
                 });
