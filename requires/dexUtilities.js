@@ -161,7 +161,10 @@ class DexUtilities {
             // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
             let ownerDocument = document.implementation.createHTMLDocument('virtual');
 
-            // TODO - doesn't work for exclusives
+            // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
+            // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
+            // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
+            // Venusaur and Venusaur [Mega Forme]
             let base_pokemon = $(data, ownerDocument).find('#dexinfo>h3').text().split(' ')[0].replace('#','').replace(':','')
 
             // IN PROGRESS - parse other forms of current pokemon from form panel and
