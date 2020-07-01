@@ -397,13 +397,25 @@
                     // The remaining forms can be discovered from the loaded data.
                     // This call will discover the forms and load the data for all pokemon and forms into args
                     DexUtilities.preprocessEvolutionData(dexNumbers, args, progressBar, progressSpan).then((...new_args) => {
-                        let new_data = new_args
-                        for(let i = 0; i < new_data.length; i++) {
-                            dexNumbers.push(new_data[i].number)
-                            trees.push(new_data[i].data);
+                        let form_data = new_args
+                        let form_map = {}
+                        // join form data with dex data
+                        for(let i = 0; i < form_data.length; i++) {
+                            dexNumbers.push(form_data[i].number)
+                            trees.push(form_data[i].data);
+                            if(form_data[i].base in form_map) {
+                                form_map[form_data[i].base].push({
+                                    name: form_data[i].name,
+                                    number: form_data[i].number
+                                });
+                            } else {
+                                form_map[form_data[i].base] = [{
+                                    name: form_data[i].name,
+                                    number: form_data[i].number
+                                }];
+                            }
                         }
 
-                        // filter out the html data
                         const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(trees)
                         const parsed_families = parsed_families_and_dex_ids[0]
                         const dex_ids = parsed_families_and_dex_ids[1]
@@ -436,6 +448,10 @@
                         let maxEvoTreeDepth = {}
                         for(let pokemon in parsed_families) {
                             let evolutions = parsed_families[pokemon]
+
+                            if(pokemon === "Rotom") {
+                                console.log('break')
+                            }
 
                             // handle Mega and Totem formes separately, since they don't count
                             // towards actual evolutions
