@@ -161,16 +161,17 @@ class DexUtilities {
             // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
             let ownerDocument = document.implementation.createHTMLDocument('virtual');
 
-            // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
-            // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
-            // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
-            // Venusaur and Venusaur [Mega Forme]
-            let base_pokemon = $(data, ownerDocument).find('#dexinfo>h3').text().split(' ')[0].replace('#','').replace(':','')
-
             // IN PROGRESS - parse other forms of current pokemon from form panel and
             // load data from pages for other forms
             const form_links = $(data, ownerDocument).find('.formeregistration a')
             if(form_links.length) {
+                // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
+                // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
+                // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
+                // Venusaur and Venusaur [Mega Forme]. This means that exclusives will never have any links in the form panel
+                // and thus will never get into this if statement
+                let base_pokemon = $(data, ownerDocument).find('#dexinfo>h3').text().split(' ')[0].replace('#','').replace(':','')
+
                 progressBar['max'] = progressBar['max'] + form_links.length
                 form_links.each((k, v) => {
                     let link = $(v).attr('href');
