@@ -57,6 +57,31 @@ class DexUtilities {
         localStorage.setItem('QoLPokedex', JSON.stringify(datePlusDex))
         $('.qolDate').val(dateString)
     }
+    static parseAndStoreDexNumbers(dex) {
+        let json = JSON.parse(dex)
+        // load current list of processed dex IDs
+        let dexIDsCache = []
+        if(localStorage.getItem('QoLDexIDsCache') !== null) {
+            dexIDsCache = JSON.parse(localStorage.getItem('QoLDexIDsCache'))
+        }
+
+        let dexNumbers = [];
+        // get the list of pokedex numbers that haven't been processed before
+        for(let r in json.regions) {
+            for(let i = 0; i < json.regions[r].length; i++) {
+                if(dexIDsCache.indexOf(json.regions[r][i][0]) == -1) {
+                    dexNumbers.push(json.regions[r][i][0])
+                }
+            }
+        }
+
+        // Add the list of dexNumbers to the cache and write it back to local storage
+        dexIDsCache = dexIDsCache.concat(dexNumbers)
+        localStorage.setItem('QoLDexIDsCache', JSON.stringify(dexIDsCache))
+        return dexNumbers;
+
+
+    }
     static parseEvolutionLi(li, dex_id_map) {
         let condition = $(li).children('.condition')
         let targetElem = $(li).find('.name')[0]
@@ -127,7 +152,7 @@ class DexUtilities {
         return tree
     }
 
-    static loadEvolutionTrees(dexNumbers, progressBar, progressSpan) {
+    static loadDexPages(dexNumbers, progressBar, progressSpan) {
         let requests = []
         progressBar.value = 0
         progressSpan.textContent = "Loading Pokedex info. Please wait until this is complete..."
@@ -151,85 +176,39 @@ class DexUtilities {
         return $.when.apply(undefined, requests)
     } // loadEvolutionTrees
 
-    static preprocessEvolutionData(dexNumbers, trees, progressBar, progressSpan) {
-        let requests = [];
-
-        for(let a = 0; a < trees.length; a++) {
-            let data = trees[a]
+    static loadFormPages(firstFormHTML, progressBar, progressSpan) {
+        let requests = []
+        for(let a = 0; a < firstFormHTML.length; a++) {
+            let data = firstFormHTML[a]
             // because the evolution tree for all the members of a single family will have the same text,
             // use the text as a key in families
             // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
             let ownerDocument = document.implementation.createHTMLDocument('virtual');
 
-            // IN PROGRESS - parse other forms of current pokemon from form panel and
             // load data from pages for other forms
             const form_links = $(data, ownerDocument).find('.formeregistration a')
             if(form_links.length) {
-                // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
-                // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
-                // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
-                // Venusaur and Venusaur [Mega Forme]. This means that exclusives will never have any links in the form panel
-                // and thus will never get into this if statement
-                const name_header = $(data, ownerDocument).find('#dexinfo>h3')[0]
-                const form_i = $(name_header).children('i.small')
-
-                // https://stackoverflow.com/questions/3442394/using-text-to-retrieve-only-text-not-nested-in-child-tags
-                // get text but not children's text
-                let name_text = $(name_header).clone().children().remove().end().text()
-                let name_splits = name_text.split(' ')
-                let base_pokemon_number = name_splits[0].replace('#','').replace(':','')
-                // just in case the name is more than one word, join the remaining elements back together
-                name_splits.splice(0, 1)
-                let base_pokemon_name = name_splits.join(' ').trim()
-                let pokemon_name = (form_i.length) ? base_pokemon_name + ' ' + form_i.text() : base_pokemon_name
-
-                // use the footbar to get the full pokedex number for the current form
-                let current_link = $(data, ownerDocument).find('#footbar>span>a[href^="/shortlinks"]').attr('href')
-                let current_number = current_link.substring(current_link.indexOf('/dex/')+5)
-
                 progressBar['max'] = progressBar['max'] + form_links.length
                 form_links.each((k, v) => {
                     let link = $(v).attr('href');
                     let link_name = v.innerText;
-                    let r = $.get('https://pokefarm.com/' + link).then((data) => {
+                    let r = $.get('https://pokefarm.com/' + link).then((form_html) => {
                         progressBar.value = progressBar['value'] + 1
                         progressSpan.textContent = `Loaded ${progressBar['value']} of ${progressBar['max']} Pokemon`
-                        return {
-                            // dex number of the base pokemon
-                            base: base_pokemon_number,
-                            // name of the form. Sometimes the base form shows up as a form in the list (e.g., Venusaur),
-                            // but sometimes it does not (e.g., Eiscue). If the name in the link is the base name,
-                            // just use the base name, but if it isn't, append the link name to the base name
-                            name: (link_name !== base_pokemon_name) ? base_pokemon_name + ' [' + link_name + ']' : link_name,
-                            // dex number of the form
-                            number: link.replace('/dex/', ''),
-                            // html
-                            data: data
-                        }
+                        return form_html;
                     })
                     requests.push(r)
                 });
 
                 // make a promise for the current form so the list of forms for each pokemon will be complete
-                requests.push((new Promise()).then(() => {
-                    return {
-                        // dex number of the base pokemon
-                        base: base_pokemon_number,
-                        // name of the form. Sometimes the base form shows up as a form in the list (e.g., Venusaur),
-                        // but sometimes it does not (e.g., Eiscue). If the name in the link is the base name,
-                        // just use the base name, but if it isn't, append the link name to the base name
-                        name: pokemon_name,
-                        // dex number of the form
-                        number: current_number,
-                        // html
-                        data: ""
-                    }
+                requests.push(Promise.resolve('Success').then(() => {
+                    return data;
                 }));
             }
         } // for
 
         return $.when.apply(undefined, requests)
-    } // preprocessEvolutionData
+    } // loadFormPages
 
     static parseEvolutionTrees(args) {
         const families = {}
@@ -248,6 +227,10 @@ class DexUtilities {
             // there will be no link in the span with the pokemon's name
             let rootName = $(tree).children()[0].textContent
 
+            if(rootName.includes("Unown")) {
+                console.log('fdsa')
+            }
+
             // if the root name is already in in the flat files, but the root of the tree is not in the dex_id_map
             if((!(rootName in flat_families)) || (!(rootName in dex_id_map))) {
                 // parseEvolutionTree returns a tree
@@ -258,6 +241,15 @@ class DexUtilities {
                 //   - {'source': <beginning pokemon>,
                 //   -  'condition': <condition html>,
                 //      'target': <ending pokemon>}
+
+                // the evolution tree won't have the dex ID for the form of the pokemon that we're currently using
+                // use the footbar to get the full pokedex number for the current form
+                let current_link = $(data, ownerDocument).find('#footbar>span>a[href^="/shortlinks"]').attr('href')
+                let current_number = current_link.substring(current_link.indexOf('/dex/')+5)
+                let name_h3 = $(data, ownerDocument).find('#dexinfo>h3')[0]
+                let current_name = name_h3.innerText.substring(name_h3.innerText.indexOf(' ')+1)
+                dex_id_map[current_name] = current_number
+
                 let flattened = DexUtilities.flattenFamily(families[tree.textContent])
 
                 // parse the evolution conditions
@@ -273,6 +265,69 @@ class DexUtilities {
 
         return [flat_families, dex_id_map]
     } // parseEvolutionTrees
+
+    static parseFormData(args) {
+        const form_data = {};
+        const form_map = {};
+
+        for(let a = 0; a < args.length; a++) {
+            let data = args[a]
+            // because the evolution tree for all the members of a single family will have the same text,
+            // use the text as a key in families
+            // use the ownerDocument parameter to jQuery to stop jQuery from loading images and audio files
+            let ownerDocument = document.implementation.createHTMLDocument('virtual');
+            let form_panel = $(data, ownerDocument).find('.formeregistration')[0]
+
+            // Note - I thought this wouldn't work for exclusives because they're pokedex numbers all start with "000",
+            // but when exclusives have multiple forms, each form has its dex entry, and the forms are not grouped
+            // into the panel of a single pokemon. See Lunupine and Lunupine [Mega Forme Q] as an example, contrasted with
+            // Venusaur and Venusaur [Mega Forme]. This means that exclusives will never have any links in the form panel
+            // and thus will never get into this if statement
+            const name_header = $(data, ownerDocument).find('#dexinfo>h3')[0]
+            const form_i = $(name_header).children('i.small')
+
+            // https://stackoverflow.com/questions/3442394/using-text-to-retrieve-only-text-not-nested-in-child-tags
+            // get text but not children's text
+            let name_text = $(name_header).clone().children().remove().end().text()
+            let name_splits = name_text.split(' ')
+            let base_pokemon_number = name_splits[0].replace('#','').replace(':','')
+            // just in case the name is more than one word, join the remaining elements back together
+            name_splits.splice(0, 1)
+            let base_pokemon_name = name_splits.join(' ').trim()
+            let pokemon_name = (form_i.length) ? base_pokemon_name + ' ' + form_i.text() : base_pokemon_name
+
+            // use the footbar to get the full pokedex number for the current form
+            let current_link = $(data, ownerDocument).find('#footbar>span>a[href^="/shortlinks"]').attr('href')
+            let current_number = current_link.substring(current_link.indexOf('/dex/')+5)
+
+            (form_data[pokemon_name] = form_data[pokemon_name] || []).push({
+                // dex number of the base pokemon
+                base_number: base_pokemon_number,
+                // name of the base pokemon
+                base_name: base_pokemon_name,
+                // dex number of the form
+                number: current_number,
+                // name of the form
+                name: pokemon_name
+            });
+        } // for a
+
+        // reorganize forms to all be under the base
+        for(let i = 0; i < form_data.length; i++) {
+            (form_map[form_data[i].base] = form_map[form_data[i].base] || []).push({
+                name: form_data[i].name,
+                number: form_data[i].number
+            });
+        }
+        // duplicate data from base pokemon into entries for each form
+        for(let i = 0; i < form_data.length; i++) {
+            if(form_data[i].base !== form_data[i].number) {
+                form_map[form_data[i].number] = form_map[form_data[i].base];
+            }
+        }
+
+        return [form_data, form_map];
+    } // parseFormData
 
     static flattenFamily(family_obj, ret_obj, evo_src) {
         if(ret_obj === undefined) {
@@ -361,7 +416,12 @@ class DexUtilities {
     }
 
     static saveEvolveByLevelList(parsed_families, dex_ids) {
+        // load current evolve by level list
         let evolveByLevelList = {}
+        if(localStorage.getItem('QoLEvolveByLevel') !== null) {
+            evolveByLevelList = JSON.parse(localStorage.getItem('QoLEvolveByLevel'))
+        }
+
         for(let pokemon in parsed_families) {
             let evolutions = parsed_families[pokemon]
             for(let i = 0; i < evolutions.length; i++) {
