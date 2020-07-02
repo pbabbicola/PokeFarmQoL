@@ -178,8 +178,10 @@ class DexUtilities {
                 let name_text = $(name_header).clone().children().remove().end().text()
                 let name_splits = name_text.split(' ')
                 let base_pokemon_number = name_splits[0].replace('#','').replace(':','')
-                let base_pokemon_name = name_splits[1]
-                let pokemon_name = (form_i.length) ? base_pokemon_name + ' [' + form_i.text() + ']' : base_pokemon_name
+                // just in case the name is more than one word, join the remaining elements back together
+                name_splits.splice(0, 1)
+                let base_pokemon_name = name_splits.join(' ').trim()
+                let pokemon_name = (form_i.length) ? base_pokemon_name + ' ' + form_i.text() : base_pokemon_name
 
                 progressBar['max'] = progressBar['max'] + form_links.length
                 form_links.each((k, v) => {
@@ -337,4 +339,27 @@ class DexUtilities {
             }
         }
     }
-}
+
+    static saveEvolveByLevelList(parsed_families, dex_ids) {
+        let evolveByLevelList = {}
+        for(let pokemon in parsed_families) {
+            let evolutions = parsed_families[pokemon]
+            for(let i = 0; i < evolutions.length; i++) {
+                let evo = evolutions[i]
+                if(!(evo.source in evolveByLevelList) && Array.isArray(evo.condition)) {
+                    for(let j = 0; j < evo.condition.length; j++) {
+                        let cond = evo.condition[j]
+                        if(cond.condition === "Level") {
+                            evolveByLevelList[evo.source] = cond.condition + " " + cond.data
+                            evolveByLevelList[dex_ids[evo.source]] = cond.condition + " " + cond.data
+                        } // if
+                    } // for
+                } // if
+            } // for
+        } // for pokemon
+
+        GLOBALS.EVOLVE_BY_LEVEL_LIST = evolveByLevelList
+        localStorage.setItem('QoLEvolveByLevel', JSON.stringify(evolveByLevelList))
+    } // saveEvolveByLevelList
+
+} // DexUtilities
