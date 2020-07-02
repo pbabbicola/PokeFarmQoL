@@ -183,6 +183,10 @@ class DexUtilities {
                 let base_pokemon_name = name_splits.join(' ').trim()
                 let pokemon_name = (form_i.length) ? base_pokemon_name + ' ' + form_i.text() : base_pokemon_name
 
+                // use the footbar to get the full pokedex number for the current form
+                let current_link = $(data, ownerDocument).find('#footbar>span>a[href^="/shortlinks"]').attr('href')
+                let current_number = current_link.substring(current_link.indexOf('/dex/')+5)
+
                 progressBar['max'] = progressBar['max'] + form_links.length
                 form_links.each((k, v) => {
                     let link = $(v).attr('href');
@@ -205,6 +209,22 @@ class DexUtilities {
                     })
                     requests.push(r)
                 });
+
+                // make a promise for the current form so the list of forms for each pokemon will be complete
+                requests.push((new Promise()).then(() => {
+                    return {
+                        // dex number of the base pokemon
+                        base: base_pokemon_number,
+                        // name of the form. Sometimes the base form shows up as a form in the list (e.g., Venusaur),
+                        // but sometimes it does not (e.g., Eiscue). If the name in the link is the base name,
+                        // just use the base name, but if it isn't, append the link name to the base name
+                        name: pokemon_name,
+                        // dex number of the form
+                        number: current_number,
+                        // html
+                        data: ""
+                    }
+                }));
             }
         } // for
 
