@@ -487,106 +487,108 @@ class DexUtilities {
                     }
                 }
             }
-            // if(pokemon.includes("Mega Forme") || pokemon.includes("Totem Forme")) {
-            maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
-            maxEvoTreeDepth[dex_ids[pokemon]] = {'remaining': 0, 'total': 0}
-            // }
 
-            if(evolutions.length) {
-                let sources_list = evolutions.map( el => el.source )
+            if(!(pokemon in maxEvoTreeDepth)) {
+                if(evolutions.length) {
+                    // initialize new entries in the structure
+                    maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
+                    maxEvoTreeDepth[dex_ids[pokemon]] = {'remaining': 0, 'total': 0}
 
-                // don't redo the processing if the root of the tree is already in the list
-                if(sources_list[0] in maxEvoTreeDepth && pokemon !== sources_list[0]) {
-                    // data for all evolutions is added when the first pokemon is added
-                    continue;
-                }
+                    let sources_list = evolutions.map( el => el.source )
 
-                let evo_tree = {}
-                let last_target = evolutions[evolutions.length-1].target
-
-                for(let i = evolutions.length - 1; i >= 0; i--) {
-                    let evolution = evolutions[i];
-                    let source = evolution.source;
-                    let target = evolution.target;
-
-                    if(sources_list.indexOf(target) == -1) {
-                        evo_tree[target] = {}
-                        evo_tree[target][target] = []
+                    // don't redo the processing if the root of the tree is already in the list
+                    if(sources_list[0] in maxEvoTreeDepth && pokemon !== sources_list[0]) {
+                        // data for all evolutions is added when the first pokemon is added
+                        continue;
                     }
 
-                    if(!(source in evo_tree)) {
-                        evo_tree[source] = {}
-                        evo_tree[source][source] = [evo_tree[target]];
-                    } else {
-                        evo_tree[source][source].push(evo_tree[target]);
-                    }
-                }
+                    let evo_tree = {}
+                    let last_target = evolutions[evolutions.length-1].target
 
-                let final_tree = evo_tree[sources_list[0]]
-                let createPaths = function(stack, tree, paths) {
-                    if (tree === null) {
-                        return
-                    }
-                    let name = Object.keys(tree)[0];
-                    let children = tree[name];
-                    let num_children = children.length;
+                    for(let i = evolutions.length - 1; i >= 0; i--) {
+                        let evolution = evolutions[i];
+                        let source = evolution.source;
+                        let target = evolution.target;
 
-                    // append this node to the path array
-                    stack.push(name)
-                    if(num_children === 0) {
-                        // append all of its children
-                        paths.push(stack.reverse().join('|'));
-                        stack.reverse()
-                    } else {
-                        // otherwise try subtrees
-                        for(let i = 0; i < num_children; i++) {
-                            createPaths(stack, children[i], paths)
+                        if(sources_list.indexOf(target) == -1) {
+                            evo_tree[target] = {}
+                            evo_tree[target][target] = []
                         }
-                    }
-                    stack.pop()
-                }
-                let parseEvolutionPaths = function(tree) {
-                    let paths = []
-                    createPaths([], tree, paths)
 
-                    // get remaining number of evolutions in each path and total number
-                    // of evolutions along each path
-                    let pokemon_path_data = {}
-                    for(let p = 0; p < paths.length; p++) {
-                        let mons = paths[p].split('|')
-                        for(let m = 0; m < mons.length; m++) {
-                            // first or only appearance
-                            if(!(mons[m] in pokemon_path_data)) {
-                                pokemon_path_data[mons[m]] = {'remaining': m, 'total': mons.length - 1}
-                            }
-                            // pokemon has multiple evolution paths
-                            else {
-                                const remaining = pokemon_path_data[mons[m]].remaining
-                                const total = pokemon_path_data[mons[m]].total
-                                pokemon_path_data[mons[m]].remaining = (remaining + m) / 2
-                                pokemon_path_data[mons[m]].total = (total + mons.length - 1) / 2
-                            }
+                        if(!(source in evo_tree)) {
+                            evo_tree[source] = {}
+                            evo_tree[source][source] = [evo_tree[target]];
+                        } else {
+                            evo_tree[source][source].push(evo_tree[target]);
                         }
                     }
 
-                    // return paths.map((p) => { return p.split('|').length })
-                    return pokemon_path_data;
-                }
+                    let final_tree = evo_tree[sources_list[0]]
+                    let createPaths = function(stack, tree, paths) {
+                        if (tree === null) {
+                            return
+                        }
+                        let name = Object.keys(tree)[0];
+                        let children = tree[name];
+                        let num_children = children.length;
 
-                // - 1 because there is one less evolution then there are pokemon
-                let parsed_path_data = parseEvolutionPaths(final_tree);
-                for(let p in parsed_path_data) {
-                    maxEvoTreeDepth[p] = parsed_path_data[p];
-                    maxEvoTreeDepth[dex_ids[p]] = parsed_path_data[p];
+                        // append this node to the path array
+                        stack.push(name)
+                        if(num_children === 0) {
+                            // append all of its children
+                            paths.push(stack.reverse().join('|'));
+                            stack.reverse()
+                        } else {
+                            // otherwise try subtrees
+                            for(let i = 0; i < num_children; i++) {
+                                createPaths(stack, children[i], paths)
+                            }
+                        }
+                        stack.pop()
+                    }
+                    let parseEvolutionPaths = function(tree) {
+                        let paths = []
+                        createPaths([], tree, paths)
+
+                        // get remaining number of evolutions in each path and total number
+                        // of evolutions along each path
+                        let pokemon_path_data = {}
+                        for(let p = 0; p < paths.length; p++) {
+                            let mons = paths[p].split('|')
+                            for(let m = 0; m < mons.length; m++) {
+                                // first or only appearance
+                                if(!(mons[m] in pokemon_path_data)) {
+                                    pokemon_path_data[mons[m]] = {'remaining': m, 'total': mons.length - 1}
+                                }
+                                // pokemon has multiple evolution paths
+                                else {
+                                    const remaining = pokemon_path_data[mons[m]].remaining
+                                    const total = pokemon_path_data[mons[m]].total
+                                    pokemon_path_data[mons[m]].remaining = (remaining + m) / 2
+                                    pokemon_path_data[mons[m]].total = (total + mons.length - 1) / 2
+                                }
+                            }
+                        }
+
+                        // return paths.map((p) => { return p.split('|').length })
+                        return pokemon_path_data;
+                    }
+
+                    // - 1 because there is one less evolution then there are pokemon
+                    let parsed_path_data = parseEvolutionPaths(final_tree);
+                    for(let p in parsed_path_data) {
+                        maxEvoTreeDepth[p] = parsed_path_data[p];
+                        maxEvoTreeDepth[dex_ids[p]] = parsed_path_data[p];
+                    }
+                    // maxEvoTreeDepth[pokemon] = Math.max(...parseEvolutionPaths(final_tree)) - 1;
+                    // maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
+                } // if evolutions.length
+                // add pokemon that don't evolve
+                else {
+                    maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
+                    maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
                 }
-                // maxEvoTreeDepth[pokemon] = Math.max(...parseEvolutionPaths(final_tree)) - 1;
-                // maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
-            } // if evolutions.length
-            // add pokemon that don't evolve
-            else {
-                maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
-                maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
-            }
+            } // if not in maxEvoTreeDepth
         } // for pokemon in parsed_families
 
         localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth))
