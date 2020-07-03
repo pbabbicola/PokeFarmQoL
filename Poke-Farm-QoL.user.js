@@ -356,33 +356,7 @@
         DexUtilities.loadDexPage().then((data) => {
             let html = jQuery.parseHTML(data)
             let dex = $(html[10].querySelector('#dexdata')).html()
-            let json = JSON.parse(dex)
-            const dexNumbers = [];
-
-            // load current list of processed dex IDs
-            let dexIDsCache = []
-            if(localStorage.getItem('QoLDexIDsCache') !== null) {
-                dexIDsCache = JSON.parse(localStorage.getItem('QoLDexIDsCache'))
-            }
-
-            // get the list of pokedex numbers that haven't been processed before
-            for(let r in json.regions) {
-                for(let i = 0; i < json.regions[r].length; i++) {
-                    if(dexIDsCache.indexOf(json.regions[r][i][0]) == -1) {
-                        dexNumbers.push(json.regions[r][i][0])
-                    }
-                }
-            }
-
-            // Add the list of dexNumbers to the cache and write it back to local storage
-            dexIDsCache = dexIDsCache.concat(dexNumbers)
-            localStorage.setItem('QoLDexIDsCache', JSON.stringify(dexIDsCache))
-
-            // load current evolve by level list
-            let evolveByLevelList = {}
-            if(localStorage.getItem('QoLEvolveByLevel') !== null) {
-                evolveByLevelList = JSON.parse(localStorage.getItem('QoLEvolveByLevel'))
-            }
+            const dexNumbers = DexUtilities.parseAndStoreDexNumbers(dex);
 
             if(dexNumbers.length > 0) {
                 // update the progress bar in the hub
@@ -390,185 +364,31 @@
                 const progressBar = $('progress.qolDexUpdateProgress')[0]
                 progressBar['max'] = limit
 
-                // load and parse the evolution data for each
-                DexUtilities.loadEvolutionTrees(dexNumbers, progressBar, progressSpan).then((...args) => {
-                    let trees = args
-                    // When pokemon have multiple forms, the dex page for only one of the forms will be loaded.
-                    // The remaining forms can be discovered from the loaded data.
-                    // This call will discover the forms and load the data for all pokemon and forms into args
-                    DexUtilities.preprocessEvolutionData(dexNumbers, args, progressBar, progressSpan).then((...new_args) => {
-                        let form_data = new_args
-                        let form_map = {}
-                        // join form data with dex data
-                        for(let i = 0; i < form_data.length; i++) {
-                            dexNumbers.push(form_data[i].number)
-                            trees.push(form_data[i].data);
-                            if(form_data[i].base in form_map) {
-                                form_map[form_data[i].base].push({
-                                    name: form_data[i].name,
-                                    number: form_data[i].number
-                                });
-                            } else {
-                                form_map[form_data[i].base] = [{
-                                    name: form_data[i].name,
-                                    number: form_data[i].number
-                                }];
-                            }
-                        }
+                DexUtilities.loadDexPages(dexNumbers, progressBar, progressSpan).then((...dexPagesHTML) => {
+                    DexUtilities.loadFormPages(dexPagesHTML, progressBar, progressSpan).then((...formPagesHTML) => {
 
-                        const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(trees)
+                        // Combine the arrays of HTML into one array
+                        let allPagesHTML = dexPagesHTML.concat(formPagesHTML);
+
+                        // Parse evolution data
+                        // const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(dexPagesHTML);
+                        const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(allPagesHTML);
                         const parsed_families = parsed_families_and_dex_ids[0]
                         const dex_ids = parsed_families_and_dex_ids[1]
 
-                        // right now, only interested in pokemon that evolve by level
-                        // so, this just builds a list of pokemon that evolve by level
-                        let evolveByLevelList = {}
-                        for(let pokemon in parsed_families) {
-                            let evolutions = parsed_families[pokemon]
-                            for(let i = 0; i < evolutions.length; i++) {
-                                let evo = evolutions[i]
-                                if(!(evo.source in evolveByLevelList) && Array.isArray(evo.condition)) {
-                                    for(let j = 0; j < evo.condition.length; j++) {
-                                        let cond = evo.condition[j]
-                                        if(cond.condition === "Level") {
-                                            evolveByLevelList[evo.source] = cond.condition + " " + cond.data
-                                            evolveByLevelList[dex_ids[evo.source]] = cond.condition + " " + cond.data
-                                        } // if
-                                    } // for
-                                } // if
-                            } // for
-                        } // for pokemon
+                        // Parse form data
+                        // const parsed_forms_and_map = DexUtilities.parseFormData(formPagesHTML);
+                        const parsed_forms_and_map = DexUtilities.parseFormData(allPagesHTML);
+                        const form_data = parsed_forms_and_map[0];
+                        const form_map = parsed_forms_and_map[1];
 
-                        GLOBALS.EVOLVE_BY_LEVEL_LIST = evolveByLevelList
-                        localStorage.setItem('QoLEvolveByLevel', JSON.stringify(evolveByLevelList))
+                        DexUtilities.saveEvolveByLevelList(parsed_families, dex_ids)
 
-                        // store the maximum depth of the evolution tree for each pokemon
-                        // for highlighting each pokemon based on how fully evolved they are
-                        // https://github.com/jpgualdarrama/PokeFarmQoL/issues/11
-                        let maxEvoTreeDepth = {}
-                        for(let pokemon in parsed_families) {
-                            let evolutions = parsed_families[pokemon]
-
-                            if(pokemon === "Rotom") {
-                                console.log('break')
-                            }
-
-                            // handle Mega and Totem formes separately, since they don't count
-                            // towards actual evolutions
-                            // 1. Filter out mega/totem evolutions
-                            // 2. Add mega/totem forms to tree
-                            for(let i = evolutions.length - 1; i>= 0; i--) {
-                                if(evolutions[i].target.includes("Mega Forme") ||
-                                   evolutions[i].target.includes("Totem Forme")) {
-                                    evolutions.splice(i, 1);
-                                }
-                            }
-                            if(pokemon.includes("Mega Forme") || pokemon.includes("Totem Forme")) {
-                                maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
-                            }
-
-                            if(evolutions.length) {
-                                let sources_list = evolutions.map( (el) => { return el.source } )
-
-                                // don't redo the processing if the root of the tree is already in the list
-                                if(sources_list[0] in maxEvoTreeDepth) {
-                                    // data for all evolutions is added when the first pokemon is added
-                                    continue;
-                                }
-
-                                let evo_tree = {}
-                                let last_target = evolutions[evolutions.length-1].target
-
-                                for(let i = evolutions.length - 1; i >= 0; i--) {
-                                    let evolution = evolutions[i];
-                                    let source = evolution.source;
-                                    let target = evolution.target;
-
-                                    if(sources_list.indexOf(target) == -1) {
-                                        evo_tree[target] = {}
-                                        evo_tree[target][target] = []
-                                    }
-
-                                    if(!(source in evo_tree)) {
-                                        evo_tree[source] = {}
-                                        evo_tree[source][source] = [evo_tree[target]];
-                                    } else {
-                                        evo_tree[source][source].push(evo_tree[target]);
-                                    }
-                                }
-
-                                let final_tree = evo_tree[sources_list[0]]
-                                let createPaths = function(stack, tree, paths) {
-                                    if (tree === null) {
-                                        return
-                                    }
-                                    let name = Object.keys(tree)[0];
-                                    let children = tree[name];
-                                    let num_children = children.length;
-
-                                    // append this node to the path array
-                                    stack.push(name)
-                                    if(num_children === 0) {
-                                        // append all of its children
-                                        paths.push(stack.reverse().join('|'));
-                                        stack.reverse()
-                                    } else {
-                                        // otherwise try subtrees
-                                        for(let i = 0; i < num_children; i++) {
-                                            createPaths(stack, children[i], paths)
-                                        }
-                                    }
-                                    stack.pop()
-                                }
-                                let parseEvolutionPaths = function(tree) {
-                                    let paths = []
-                                    createPaths([], tree, paths)
-
-                                    // get remaining number of evolutions in each path and total number
-                                    // of evolutions along each path
-                                    let pokemon_path_data = {}
-                                    for(let p = 0; p < paths.length; p++) {
-                                        let mons = paths[p].split('|')
-                                        for(let m = 0; m < mons.length; m++) {
-                                            // first or only appearance
-                                            if(!(mons[m] in pokemon_path_data)) {
-                                                pokemon_path_data[mons[m]] = {'remaining': m, 'total': mons.length - 1}
-                                            }
-                                            // pokemon has multiple evolution paths
-                                            else {
-                                                const remaining = pokemon_path_data[mons[m]].remaining
-                                                const total = pokemon_path_data[mons[m]].total
-                                                pokemon_path_data[mons[m]].remaining = (remaining + m) / 2
-                                                pokemon_path_data[mons[m]].total = (total + mons.length - 1) / 2
-                                            }
-                                        }
-                                    }
-
-                                    // return paths.map((p) => { return p.split('|').length })
-                                    return pokemon_path_data;
-                                }
-
-                                // - 1 because there is one less evolution then there are pokemon
-                                let parsed_path_data = parseEvolutionPaths(final_tree);
-                                for(let p in parsed_path_data) {
-                                    maxEvoTreeDepth[p] = parsed_path_data[p];
-                                    maxEvoTreeDepth[dex_ids[p]] = parsed_path_data[p];
-                                }
-                                // maxEvoTreeDepth[pokemon] = Math.max(...parseEvolutionPaths(final_tree)) - 1;
-                                // maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
-                            } // if evolutions.length
-                            // add pokemon that don't evolve
-                            else {
-                                maxEvoTreeDepth[pokemon] = {'remaining': 0, 'total': 0}
-                                maxEvoTreeDepth[dex_ids[pokemon]] = maxEvoTreeDepth[pokemon]
-                            }
-                        } // for pokemon in parsed_families
-
-                        localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth))
+                        DexUtilities.saveEvolutionTreeDepths(parsed_families, dex_ids, form_data, form_map);
 
                         progressSpan.textContent = "Complete!"
-                    }); // preprocessEvolutionData
-                }) // loadEvolutionTrees
+                    }); // loadFormPages
+                }) // loadDexData
             } // if dexNumbers.length > 0
             else {
                 progressSpan.textContent = "Complete!"
