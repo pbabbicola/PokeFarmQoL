@@ -165,7 +165,13 @@ class PrivateFieldsPage extends Page {
     }
     */
     highlightByHowFullyEvolved(pokemon_elem) {
-        let pokemon = $(pokemon_elem).children('img.big').attr('alt');
+        // if a pokemon is clicked-and-dragged, the tooltip element after the pokemon
+        // will not exist. If this occurs. don't try highlighting anything until the
+        // pokemon is "put down"
+        if(!$(pokemon_elem).next().length) { return; }
+
+        const tooltip = Helpers.parseFieldPokemonTooltip($(pokemon_elem).next()[0]);
+        let pokemon = tooltip['species'];
 
         const key = 'QoLEvolutionTreeDepth'
         if(localStorage.getItem(key) !== null) {
@@ -173,7 +179,6 @@ class PrivateFieldsPage extends Page {
             if(Object.keys(evolution_data).length > 0) {
                 // if can't find the pokemon directly, try looking for its form data
                 if(!evolution_data[pokemon]) {
-                    const tooltip = Helpers.parseFieldPokemonTooltip($(pokemon_elem).next()[0]);
                     if(tooltip['forme']) {
                         pokemon = pokemon + ' [' + tooltip['forme'] + ']'
                     }
