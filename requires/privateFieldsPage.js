@@ -243,12 +243,13 @@ class PrivateFieldsPage extends Page {
                 } else {
                     const evolutions_left = evolution_data[pokemon].remaining
                     const evolution_tree_depth = evolution_data[pokemon].total
-                    const highlighting = 100*Math.round(evolutions_left / evolution_tree_depth)
 
-                    if(highlighting > 0) {
-                        $(pokemon_elem).children('img.big').addClass('privatefoundme');
-                        $(pokemon_elem).children('img.big').css('border-radius', highlighting + '%')
+                    if(evolutions_left === 1) {
+                        $(pokemon_elem).children('img.big').addClass('oneevolutionleft');
+                    } else if(evolutions_left === 2) {
+                        $(pokemon_elem).children('img.big').addClass('twoevolutionleft');
                     }
+
                 }
             } else {
                 console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
