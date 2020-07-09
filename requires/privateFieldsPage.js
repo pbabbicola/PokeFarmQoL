@@ -24,6 +24,10 @@ class PrivateFieldsPage extends Page {
             customPokemon: true,
             customPng: false,
             releaseSelectAll : true,
+            /* tooltip settings */
+            tooltipEnableMods: false,
+            tooltipNoBerry: false,
+            tooltipBerry: false,
 	}, 'fields');
 	this.customArray = [];
 	this.typeArray = [];
@@ -33,6 +37,7 @@ class PrivateFieldsPage extends Page {
 	this.observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
 		obj.customSearch();
+                obj.handleTooltipSettings();
             });
 	});
     }
@@ -43,6 +48,7 @@ class PrivateFieldsPage extends Page {
     }
 
     setupHTML() {
+        document.querySelector('#field_field').insertAdjacentHTML('beforebegin', TEMPLATES.privateFieldTooltipModHTML);
         document.querySelector('#field_field').insertAdjacentHTML('afterend', TEMPLATES.privateFieldSearchHTML);
 
         const theField = Helpers.textSearchDiv('numberDiv', 'fieldCustom', 'removeTextField', 'customArray')
@@ -60,6 +66,8 @@ class PrivateFieldsPage extends Page {
         Helpers.setupFieldArrayHTML(this.typeArray, 'fieldTypes', theType, 'typeNumber');
         Helpers.setupFieldArrayHTML(this.natureArray, 'natureTypes', theNature, 'natureNumber');
         Helpers.setupFieldArrayHTML(this.eggGroupArray, 'eggGroupTypes', theEggGroup, 'eggGroupNumber');
+
+        this.handleTooltipSettings()
     }
     setupCSS() {
         // same as public fields
@@ -69,6 +77,16 @@ class PrivateFieldsPage extends Page {
         $("#fieldorder").css("border", ""+fieldOrderCssBorder+"");
         $("#fieldsearch").css("background-color", ""+fieldOrderCssColor+"");
         $("#fieldsearch").css("border", ""+fieldOrderCssBorder+"");
+        $("#tooltipenable").css("background-color", ""+fieldOrderCssColor+"");
+        $("#tooltipenable").css("border", ""+fieldOrderCssBorder+"");
+        $("#tooltipenable").css("max-width", "600px");
+        $("#tooltipenable").css("position", "relative");
+        $("#tooltipenable").css("margin", "16px auto");
+        $("#fieldsearch").css("background-color", ""+fieldOrderCssColor+"");
+        $("#fieldsearch").css("border", ""+fieldOrderCssBorder+"");
+        $(".collapsible").css("background-color", ""+fieldOrderCssColor+"");
+        $(".collapsible").css("border", ""+fieldOrderCssBorder+"");
+        $(".collapsible_content").css("background-color", ""+fieldOrderCssColor+"");
     }
     setupObserver() {
         this.observer.observe(document.querySelector('#field_field'), {
@@ -81,7 +99,10 @@ class PrivateFieldsPage extends Page {
     setupHandlers() {
 	const obj = this
         $(window).on('load', (() => {
+            obj.loadSettings()
             obj.customSearch();
+            obj.handleTooltipSettings()
+            obj.saveSettings()
         }));
 
         $(document).on('load', '.field', (function() {
@@ -155,6 +176,39 @@ class PrivateFieldsPage extends Page {
         $(document).on('click', '*[data-menu="bulkmove"]', (function() { // select all feature
             obj.moveEnableReleaseAll();
         }));
+
+        $('.collapsible').on('click', function() {
+            this.classList.toggle('active');
+            var content = this.nextElementSibling;
+            if(content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block"
+            }
+        });
+
+        $('#field_berries').on('click', function() {
+            obj.loadSettings();
+            obj.handleTooltipSettings()
+        });
+
+        $('.tooltipsetting[data-key=tooltipEnableMods]').on('click', function() {
+            obj.loadSettings();
+            obj.handleTooltipSettings();
+            obj.saveSettings();
+        })
+
+        $('.tooltipsetting[data-key=tooltipNoBerry]').on('click', function() {
+            obj.loadSettings();
+            obj.handleTooltipSettings();
+            obj.saveSettings();
+        });
+
+        $('.tooltipsetting[data-key=tooltipBerry]').on('click', function() {
+            obj.loadSettings();
+            obj.handleTooltipSettings();
+            obj.saveSettings();
+        });
     }
     // specific
     /*
@@ -164,6 +218,7 @@ class PrivateFieldsPage extends Page {
                                '<div id="shelterfound">' + name + ((number > 1) ? 's' : '') + ' found ' + img + '</div>')
     }
     */
+
     highlightByHowFullyEvolved(pokemon_elem) {
         // if a pokemon is clicked-and-dragged, the tooltip element after the pokemon
         // will not exist. If this occurs. don't try highlighting anything until the
@@ -201,6 +256,37 @@ class PrivateFieldsPage extends Page {
         } else {
             console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
         }
+    }
+
+    handleTooltipSettings() {
+        const obj = this
+        if($('.tooltipsetting[data-key=tooltipEnableMods]').prop('checked')) {
+            // make sure checkboxes are enabled
+            $('.tooltipsetting[data-key=tooltipNoBerry]').prop('disabled', false)
+            $('.tooltipsetting[data-key=tooltipBerry]').prop('disabled', false)
+
+            // use the correct setting to turn on the tooltips based on the berries
+            if($('#field_berries').hasClass('selected')) {
+                if($('.tooltipsetting[data-key=tooltipBerry]').prop('checked')) { obj.disableTooltips(); }
+                else { obj.enableTooltips(); }
+            } else {
+                if($('.tooltipsetting[data-key=tooltipNoBerry]').prop('checked')) { obj.disableTooltips(); }
+                else { obj.enableTooltips(); }
+            }
+        } else {
+            $('.tooltipsetting[data-key=tooltipNoBerry]').prop('disabled', true)
+            $('.tooltipsetting[data-key=tooltipBerry]').prop('disabled', true)
+            // if tooltipNoBerry was checked before the mods were disabled, reenable the tooltips
+            if($('.tooltipsetting[data-key=tooltipNoBerry]').prop('checked')) {
+                obj.enableTooltips();
+            }
+        }
+    }
+    disableTooltips() {
+        $('#field_field>div.field>.fieldmon').removeAttr('data-tooltip').removeClass('tooltip_trigger')
+    }
+    enableTooltips() {
+        $('#field_field>div.field>.fieldmon').attr('data-tooltip', "")
     }
 
     searchForImgTitle(key) {

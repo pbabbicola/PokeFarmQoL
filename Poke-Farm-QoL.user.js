@@ -5,7 +5,7 @@
 // @homepage     https://github.com/jpgualdarrama/PokeFarmQoL
 // @downloadURL  https://github.com/jpgualdarrama/PokeFarmQoL/raw/issue_11/Poke-Farm-QoL.user.js
 // @description  Quality of Life changes to Pokéfarm!
-// @version      1.3.61
+// @version      1.3.62
 // @match        https://pokefarm.com/*
 // @require      http://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.min.js
@@ -15,6 +15,8 @@
 // @resource     evolveFastHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/evolveFastHTML.html
 // @resource     labOptionsHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/labOptionsHTML.html
 // @resource     fieldSortHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/fieldSortHTML.html
+// @resource     publicFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/publicFieldTooltipModHTML.html
+// @resource     privateFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/privateFieldTooltipModHTML.html
 // @resource     fieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/fieldSearchHTML.html
 // @resource     privateFieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/templates/privateFieldSearchHTML.html
 // @resource     QoLCSS                 https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/issue_11/resources/css/pfqol.css
