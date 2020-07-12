@@ -392,6 +392,13 @@ class PrivateFieldsPage extends Page {
             $('.fieldmon').each(function() {
                 obj.highlightByHowFullyEvolved(this)
             })
+        } else {
+            $('.oneevolutionleft').each(() => {
+                this.removeClass('oneevolutionleft');
+            });
+            $('.twoevolutionleft').each(() => {
+                this.removeClass('twoevolutionleft');
+            });
         }
 
         const filteredTypeArray = this.typeArray.filter(v=>v!='');
