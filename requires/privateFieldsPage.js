@@ -393,11 +393,11 @@ class PrivateFieldsPage extends Page {
                 obj.highlightByHowFullyEvolved(this)
             })
         } else {
-            $('.oneevolutionleft').each(() => {
-                this.removeClass('oneevolutionleft');
+            $('.oneevolutionleft').each((k, v) => {
+                $(v).removeClass('oneevolutionleft');
             });
-            $('.twoevolutionleft').each(() => {
-                this.removeClass('twoevolutionleft');
+            $('.twoevolutionleft').each((k, v) => {
+                $(v).removeClass('twoevolutionleft');
             });
         }
 
