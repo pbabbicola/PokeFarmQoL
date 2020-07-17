@@ -3,37 +3,37 @@
 // @namespace    https://github.com/jpgualdarrama/
 // @author       Bentomon
 // @homepage     https://github.com/jpgualdarrama/PokeFarmQoL
-// @downloadURL  https://github.com/jpgualdarrama/PokeFarmQoL/raw/master/Poke-Farm-QoL.user.js
+// @downloadURL  https://github.com/jpgualdarrama/PokeFarmQoL/raw/merge_issue_11_into_master/Poke-Farm-QoL.user.js
 // @description  Quality of Life changes to Pokéfarm!
 // @version      1.3.62
 // @match        https://pokefarm.com/*
 // @require      http://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://raw.githubusercontent.com/lodash/lodash/4.17.4/dist/lodash.min.js
 // @require      https://cdn.rawgit.com/omichelsen/compare-versions/v3.1.0/index.js
-// @resource     QolHubHTML            https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/qolHubHTML.html
-// @resource     shelterSettingsHTML    https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/shelterOptionsHTML.html
-// @resource     evolveFastHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/evolveFastHTML.html
-// @resource     labOptionsHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/labOptionsHTML.html
-// @resource     fieldSortHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/fieldSortHTML.html
-// @resource     publicFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/publicFieldTooltipModHTML.html
-// @resource     privateFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/privateFieldTooltipModHTML.html
-// @resource     fieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/fieldSearchHTML.html
-// @resource     privateFieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/templates/privateFieldSearchHTML.html
-// @resource     QoLCSS                 https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/resources/css/pfqol.css
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/helpers.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/dexUtilities.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/globals.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/basePage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/shelterPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/privateFieldsPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/publicFieldsPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/labPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/fishingPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/multiuserPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/farmPage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/daycarePage.js
-// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/master/requires/dexPage.js
-// @updateURL    https://github.com/jpgualdarrama/PokeFarmQoL/raw/master/Poke-Farm-QoL.user.js
+// @resource     QolHubHTML            https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/qolHubHTML.html
+// @resource     shelterSettingsHTML    https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/shelterOptionsHTML.html
+// @resource     evolveFastHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/evolveFastHTML.html
+// @resource     labOptionsHTML         https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/labOptionsHTML.html
+// @resource     fieldSortHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/fieldSortHTML.html
+// @resource     publicFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/publicFieldTooltipModHTML.html
+// @resource     privateFieldTooltipModHTML  https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/privateFieldTooltipModHTML.html
+// @resource     fieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/fieldSearchHTML.html
+// @resource     privateFieldSearchHTML        https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/templates/privateFieldSearchHTML.html
+// @resource     QoLCSS                 https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/resources/css/pfqol.css
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/helpers.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/dexUtilities.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/globals.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/basePage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/shelterPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/privateFieldsPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/publicFieldsPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/labPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/fishingPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/multiuserPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/farmPage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/daycarePage.js
+// @require      https://raw.githubusercontent.com/jpgualdarrama/PokeFarmQoL/merge_issue_11_into_master/requires/dexPage.js
+// @updateURL    https://github.com/jpgualdarrama/PokeFarmQoL/raw/merge_issue_11_into_master/Poke-Farm-QoL.user.js
 // @connect      github.com
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
@@ -358,33 +358,7 @@
         DexUtilities.loadDexPage().then((data) => {
             let html = jQuery.parseHTML(data)
             let dex = $(html[10].querySelector('#dexdata')).html()
-            let json = JSON.parse(dex)
-            const dexNumbers = [];
-
-            // load current list of processed dex IDs
-            let dexIDsCache = []
-            if(localStorage.getItem('QoLDexIDsCache') !== null) {
-                dexIDsCache = JSON.parse(localStorage.getItem('QoLDexIDsCache'))
-            }
-
-            // get the list of pokedex numbers that haven't been processed before
-            for(let r in json.regions) {
-                for(let i = 0; i < json.regions[r].length; i++) {
-                    if(dexIDsCache.indexOf(json.regions[r][i][0]) == -1) {
-                        dexNumbers.push(json.regions[r][i][0])
-                    }
-                }
-            }
-
-            // Add the list of dexNumbers to the cache and write it back to local storage
-            dexIDsCache = dexIDsCache.concat(dexNumbers)
-            localStorage.setItem('QoLDexIDsCache', JSON.stringify(dexIDsCache))
-
-            // load current evolve by level list
-            let evolveByLevelList = {}
-            if(localStorage.getItem('QoLEvolveByLevel') !== null) {
-                evolveByLevelList = JSON.parse(localStorage.getItem('QoLEvolveByLevel'))
-            }
+            const dexNumbers = DexUtilities.parseAndStoreDexNumbers(dex);
 
             if(dexNumbers.length > 0) {
                 // update the progress bar in the hub
@@ -392,37 +366,31 @@
                 const progressBar = $('progress.qolDexUpdateProgress')[0]
                 progressBar['max'] = limit
 
-                // load and parse the evolution data for each
-                DexUtilities.loadEvolutionTrees(dexNumbers, progressBar, progressSpan).then((...args) => {
-                    // filter out the html data
-                    let trees = args
-                    const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(trees)
-                    const parsed_families = parsed_families_and_dex_ids[0]
-                    const dex_ids = parsed_families_and_dex_ids[1]
+                DexUtilities.loadDexPages(dexNumbers, progressBar, progressSpan).then((...dexPagesHTML) => {
+                    DexUtilities.loadFormPages(dexPagesHTML, progressBar, progressSpan).then((...formPagesHTML) => {
 
-                    // right now, only interested in pokemon that evolve by level
-                    // so, this just builds a list of pokemon that evolve by level
-                    let evolveByLevelList = {}
-                    for(let pokemon in parsed_families) {
-                        let evolutions = parsed_families[pokemon]
-                        for(let i = 0; i < evolutions.length; i++) {
-                            let evo = evolutions[i]
-                            if(!(evo.source in evolveByLevelList) && Array.isArray(evo.condition)) {
-                                for(let j = 0; j < evo.condition.length; j++) {
-                                    let cond = evo.condition[j]
-                                    if(cond.condition === "Level") {
-                                        evolveByLevelList[evo.source] = cond.condition + " " + cond.data
-                                        evolveByLevelList[dex_ids[evo.source]] = cond.condition + " " + cond.data
-                                    } // if
-                                } // for
-                            } // if
-                        } // for
-                    } // for pokemon
+                        // Combine the arrays of HTML into one array
+                        let allPagesHTML = dexPagesHTML.concat(formPagesHTML);
 
-                    GLOBALS.EVOLVE_BY_LEVEL_LIST = evolveByLevelList
-                    localStorage.setItem('QoLEvolveByLevel', JSON.stringify(evolveByLevelList))
-                    progressSpan.textContent = "Complete!"
-                }) // loadEvolutionTrees
+                        // Parse evolution data
+                        // const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(dexPagesHTML);
+                        const parsed_families_and_dex_ids = DexUtilities.parseEvolutionTrees(allPagesHTML);
+                        const parsed_families = parsed_families_and_dex_ids[0]
+                        const dex_ids = parsed_families_and_dex_ids[1]
+
+                        // Parse form data
+                        // const parsed_forms_and_map = DexUtilities.parseFormData(formPagesHTML);
+                        const parsed_forms_and_map = DexUtilities.parseFormData(allPagesHTML);
+                        const form_data = parsed_forms_and_map[0];
+                        const form_map = parsed_forms_and_map[1];
+
+                        DexUtilities.saveEvolveByLevelList(parsed_families, dex_ids)
+
+                        DexUtilities.saveEvolutionTreeDepths(parsed_families, dex_ids, form_data, form_map);
+
+                        progressSpan.textContent = "Complete!"
+                    }); // loadFormPages
+                }) // loadDexData
             } // if dexNumbers.length > 0
             else {
                 progressSpan.textContent = "Complete!"
@@ -438,6 +406,7 @@
     $(document).on('click', '#clearCachedDex', (function() {
         localStorage.removeItem('QoLEvolveByLevel')
         localStorage.removeItem('QoLDexIDsCache')
+        localStorage.removeItem("QoLEvolutionTreeDepth")
     }));
 
     $(document).on('click', 'h3.slidermenu', (function() { //show hidden li in change log
