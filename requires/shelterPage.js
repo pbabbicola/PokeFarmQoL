@@ -233,9 +233,8 @@ class ShelterPage extends Page {
         }
         let pokemon = tooltip['species'];
 
-        const key = 'QoLEvolutionTreeDepth'
-        if(localStorage.getItem(key) !== null) {
-            const evolution_data = JSON.parse(localStorage.getItem(key))
+        if(GLOBALS.EVOLUTIONS_LEFT !== undefined) {
+            const evolution_data = GLOBALS.EVOLUTIONS_LEFT;
             if(Object.keys(evolution_data).length > 0) {
                 // if can't find the pokemon directly, try looking for its form data
                 if(!evolution_data[pokemon]) {
