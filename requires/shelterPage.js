@@ -235,28 +235,24 @@ class ShelterPage extends Page {
 
         if(GLOBALS.EVOLUTIONS_LEFT !== undefined) {
             const evolution_data = GLOBALS.EVOLUTIONS_LEFT;
-            if(Object.keys(evolution_data).length > 0) {
-                // if can't find the pokemon directly, try looking for its form data
-                if(!evolution_data[pokemon]) {
-                    if(tooltip['forme']) {
-                        pokemon = pokemon + ' [' + tooltip['forme'] + ']'
-                    }
+            // if can't find the pokemon directly, try looking for its form data
+            if(!evolution_data[pokemon]) {
+                if(tooltip['forme']) {
+                    pokemon = pokemon + ' [' + tooltip['forme'] + ']'
                 }
-                if(!evolution_data[pokemon]) {
-                    console.error(`Private Fields Page - Could not find evolution data for ${pokemon}`);
-                } else {
-                    const evolutions_left = evolution_data[pokemon].remaining
-                    const evolution_tree_depth = evolution_data[pokemon].total
-
-                    if(evolutions_left === 1) {
-                        $(pokemon_elem).children('img.big').addClass('oneevolutionleft');
-                    } else if(evolutions_left === 2) {
-                        $(pokemon_elem).children('img.big').addClass('twoevolutionleft');
-                    }
-
-                }
+            }
+            if(!evolution_data[pokemon]) {
+                // Testing to see if the error slows down the page
+                // console.error(`Private Fields Page - Could not find evolution data for ${pokemon}`);
             } else {
-                console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
+                const evolutions_left = evolution_data[pokemon].remaining
+                const evolution_tree_depth = evolution_data[pokemon].total
+                
+                if(evolutions_left === 1) {
+                    $(pokemon_elem).children('img.big').addClass('oneevolutionleft');
+                } else if(evolutions_left === 2) {
+                    $(pokemon_elem).children('img.big').addClass('twoevolutionleft');
+                }
             }
         } else {
             console.error('Unable to load evolution data. In QoL Hub, please clear cached dex and reload dex data');
