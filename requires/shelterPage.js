@@ -228,7 +228,7 @@ class ShelterPage extends Page {
 
         const tooltip_elem = $(pokemon_elem).next()[0];
         const tooltip = {
-            species: tooltip_elem.textContent.split(' '),
+            species: tooltip_elem.textContent.split(' ')[0],
             forme: ''
         }
         let pokemon = tooltip['species'];
@@ -320,7 +320,7 @@ class ShelterPage extends Page {
             this.searchForImgTitle('findCustomSprite')
         }
         if(this.settings.findNFE === true) {
-            $('#shelterarea>.pokemon').each(function() {
+            $('#shelterarea>[data-stage=pokemon]').each(function() {
                 obj.highlightByHowFullyEvolved(this)
             })
         }
