@@ -322,6 +322,13 @@ class ShelterPage extends Page {
             $('#shelterarea>[data-stage=pokemon]').each(function() {
                 obj.highlightByHowFullyEvolved(this)
             })
+        } else {
+            $('.oneevolutionleft').each((k, v) => {
+                $(v).removeClass('oneevolutionleft');
+            });
+            $('.twoevolutionleft').each((k, v) => {
+                $(v).removeClass('twoevolutionleft');
+            });
         }
 
         if(this.settings.findNewPokemon === true) {
