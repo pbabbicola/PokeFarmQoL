@@ -242,7 +242,7 @@ class ShelterPage extends Page {
                 }
             }
             if(!evolution_data[pokemon]) {
-                // Testing to see if the error slows down the page
+                // Do not log error here. Repeated errors can (will) slow down the page
                 // console.error(`Private Fields Page - Could not find evolution data for ${pokemon}`);
             } else {
                 const evolutions_left = evolution_data[pokemon].remaining
