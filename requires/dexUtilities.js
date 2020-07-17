@@ -591,7 +591,8 @@ class DexUtilities {
             } // if not in maxEvoTreeDepth
         } // for pokemon in parsed_families
 
-        localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth))
+        localStorage.setItem("QoLEvolutionTreeDepth", JSON.stringify(maxEvoTreeDepth));
+        GLOBALS.EVOLUTIONS_LEFT = maxEvoTreeDepth;
 
     } // saveEvolutionTreeDepths
 
